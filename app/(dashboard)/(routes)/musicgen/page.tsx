@@ -26,19 +26,58 @@ import { ArrowDownToLine } from "lucide-react";
 
 import axios from "axios";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
+
+import { v4 as uuidv4 } from "uuid";
+
+import { decode } from "base64-arraybuffer";
 
 type Track = {
   prompt: string;
   audio: string;
 };
 
+const CDNURL =
+  "https://qdciohgpchihhkgxlygz.supabase.co/storage/v1/object/public/tracks/";
+
 const MusicGenPage = () => {
-  const [track, updateTrack] = useState<Track>({ prompt: "", audio: "" });
-  const [trackArray, updateTrackArray] = useState<string[]>([]);
+  const [tracks, setTracks] = useState<string[]>([]);
   const [prompt, updatePrompt] = useState();
   const [trackLength, updateTrackLength] = useState<number>();
   const [loading, updateLoading] = useState(false);
+
+  const user = useUser();
+  const supabase = useSupabaseClient();
+
+  const getTracks = async () => {
+    try {
+      const { data: tracks } = await supabase.storage
+        .from("tracks")
+        .list(user?.id + "/", {
+          limit: 30,
+          offset: 0,
+          sortBy: {
+            column: "created_at",
+            order: "desc",
+          },
+        });
+
+      if (tracks !== null) {
+        setTracks(tracks);
+      }
+    } catch (e) {
+      alert(e);
+    } finally {
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      getTracks();
+    }
+  }, [user]);
 
   const generateTrack = async (prompt: string) => {
     updateLoading(true);
@@ -46,11 +85,23 @@ const MusicGenPage = () => {
     const track = await axios.get(
       `http://127.0.0.1:8000/?prompt=${prompt}&length=${length}`
     );
-    let newTrack = { prompt: prompt, audio: track.data };
-    updateTrack(newTrack);
-    updateLoading(false);
+    const { data, error } = await supabase.storage
+      .from("tracks")
+      .upload(
+        user?.id + "/" + `${prompt}-${uuidv4()}.wav`,
+        decode(track.data),
+        {
+          contentType: "audio/wav",
+        }
+      );
 
-    updateTrackArray([newTrack, ...trackArray]);
+    if (error) {
+      alert(error);
+    } else {
+      getTracks();
+    }
+
+    updateLoading(false);
   };
 
   const saveTrack = (track: Track) => {
@@ -123,12 +174,15 @@ const MusicGenPage = () => {
           <Skeleton className="w-5/6 h-[40px] rounded-full" />{" "}
         </div>
       ) : null}
-      {trackArray.map((track) => (
+      {tracks.map((track) => (
         <div className="flex items-center justify-center mt-4 drop-shadow-md ">
-          <Card className="w-5/6">
+          <Card className="w-5/6  relative">
             <CardHeader className="flex justify-between">
-              <CardTitle className="w-4/6">{track.prompt}</CardTitle>
+              <CardTitle className="w-4/6">
+                {track.name.split("-")[0]}
+              </CardTitle>
               <Button
+                className="absolute top- right-0 m-4"
                 onClick={(e) => saveTrack(track)}
                 size="icon"
                 variant="outline"
@@ -136,13 +190,16 @@ const MusicGenPage = () => {
                 <ArrowDownToLine />
               </Button>
             </CardHeader>
-            <audio controls key={track.audio} className="w-full h-10">
-              <source
-                src={`data:audio/wav;base64, ${track.audio}`}
-                type="audio/wav"
-              />
-              Your browser does not support the audio element.
-            </audio>
+            <div className="flex justify-center">
+              <audio
+                className="w-5/6 h-10 mb-5"
+                controls
+                key={CDNURL + user.id + "/" + track.name}
+              >
+                <source src={CDNURL + user.id + "/" + track.name} />
+                Your browser does not support the audio element.
+              </audio>
+            </div>
           </Card>
         </div>
       ))}
