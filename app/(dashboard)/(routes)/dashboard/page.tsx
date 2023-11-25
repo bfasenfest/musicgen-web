@@ -40,16 +40,23 @@ export default function DashboardPage() {
 
   return (
     <div className="mb-8 space-y-4 p-5">
-      <h3 className="text-center text-2xl md:text-4xl font-bold text-white">
-        Welcome to MusicGen
-      </h3>
-      <div className=" text-white">
-        <p>
-          MusicGen is a web app that generates music using machine learning.
-        </p>
-        <p>MusicGen is currently in development.</p>
-      </div>
-
+      <Card className="w-full h-[200px]">
+        <CardHeader>
+          <CardTitle className="text-center text-lg md:text-2xl">
+            Welcome to MusicGen!
+          </CardTitle>
+          <CardDescription className="text-center text-md md:text-lg">
+            MusicGen is a web app that generates music using machine learning.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="">
+            Below are the tracks you have generated. You can download them by
+            clicking the download button on the right. To the left you can
+            access the various different models and settings.
+          </div>
+        </CardContent>
+      </Card>
       <div className="flex flex-wrap items-center justify-center mt-4 drop-shadow-md ">
         {tracks.map((track) => (
           <Card className=" w-[300px] h-[150px] relative m-2">

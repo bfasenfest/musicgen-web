@@ -34,11 +34,13 @@ import {
 
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { ArrowDownToLine, Trash } from "lucide-react";
+import { ArrowDownToLine, Trash, Play } from "lucide-react";
+
+import { useVisualizer, models } from "react-audio-viz";
 
 import axios from "axios";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 
@@ -47,6 +49,10 @@ import { v4 as uuidv4 } from "uuid";
 import { decode } from "base64-arraybuffer";
 
 import { useTrackStore } from "@/lib/store";
+
+import { quantum } from "ldrs";
+
+quantum.register();
 
 type Track = {
   prompt: string;
@@ -60,8 +66,13 @@ const MusicGenPage = () => {
   // const [tracks, setTracks] = useState<string[]>([]);
   const { tracks, setTracks } = useTrackStore();
   const [prompt, updatePrompt] = useState();
+  const [currentTrack, setCurrentTrack] = useState();
+
   const [trackLength, updateTrackLength] = useState<number>();
   const [loading, updateLoading] = useState(false);
+
+  const audioRef = useRef(null);
+  const [AudioViz, init] = useVisualizer(audioRef);
 
   const user = useUser();
   const supabase = useSupabaseClient();
@@ -134,6 +145,16 @@ const MusicGenPage = () => {
     }
   };
 
+  const playTrack = (trackSrc: string) => {
+    setCurrentTrack(trackSrc);
+    if (audioRef.current) {
+      audioRef.current.oncanplaythrough = () => {
+        audioRef.current.play().catch((error) => console.log(error));
+      };
+      audioRef.current.load();
+    }
+  };
+
   const saveTrack = (track: Track) => {
     const url = `data:audio/wav;base64, ${track.audio}`;
     const link = document.createElement("a");
@@ -145,12 +166,22 @@ const MusicGenPage = () => {
   return (
     <div className="dark">
       <div className="flex items-center justify-center">
-        <Card className="w-5/6 ">
+        <Card className=" w-5/6 md:w-3/6 ">
           <CardHeader>
-            <CardTitle>Generate New Track</CardTitle>
-            <CardDescription>
-              Generate track using the latest music-gen models
-            </CardDescription>
+            <div className="flex justify-between">
+              <div>
+                <CardTitle>Generate New Track</CardTitle>
+                <CardDescription>
+                  Generate track using the latest music-gen models
+                </CardDescription>
+              </div>
+
+              {loading ? (
+                <div className="">
+                  <l-quantum size="45" speed="1.75" color="white"></l-quantum>
+                </div>
+              ) : null}
+            </div>
           </CardHeader>
           <CardContent>
             <form>
@@ -173,7 +204,7 @@ const MusicGenPage = () => {
                     placeholder="Track length in seconds. For Example: 5"
                   />
                 </div>
-                <div className="flex flex-col space-y-1.5">
+                {/* <div className="flex flex-col space-y-1.5">
                   <Label htmlFor="framework">Framework</Label>
                   <Select>
                     <SelectTrigger id="framework">
@@ -186,7 +217,7 @@ const MusicGenPage = () => {
                       <SelectItem value="nuxt">Nuxt.js</SelectItem>
                     </SelectContent>
                   </Select>
-                </div>
+                </div> */}
               </div>
             </form>
           </CardContent>
@@ -197,60 +228,98 @@ const MusicGenPage = () => {
             </Button>
           </CardFooter>
         </Card>
+
+        <Card className="hidden md:block w-5/12 ml-5">
+          <div className=" h-60 ">
+            <AudioViz
+              model={models.horizontal({
+                darkMode: true,
+                reversed: false,
+                fadeBars: true,
+                scale: 0.9,
+                color: "#F44E3B",
+                binSize: 25,
+                frequencyRange: [0, 16000],
+              })}
+            />
+          </div>
+          <div className="flex justify-center">
+            <audio
+              className="w-5/6 h-10 mb-5 mt-4"
+              controls={true}
+              ref={audioRef}
+              onPlay={init}
+              crossOrigin="anonymous"
+              src={currentTrack}
+            />
+          </div>
+        </Card>
       </div>
 
-      {loading ? (
-        <div className="flex items-center justify-center mt-4 drop-shadow-md">
-          <Skeleton className="w-5/6 h-[40px] rounded-full" />{" "}
-        </div>
-      ) : null}
-      {tracks.map((track) => (
-        <div className="flex items-center justify-center mt-4 drop-shadow-md ">
-          <Card className="w-5/6  relative">
+      <div className="flex flex-wrap items-center justify-center mt-4 drop-shadow-md">
+        {loading ? (
+          <div className="flex items-center justify-center drop-shadow-md">
+            <Skeleton className="h-[150px] w-[300px] m-2 " />{" "}
+          </div>
+        ) : null}
+        {tracks.map((track) => (
+          <Card
+            className="h-[150px] w-[300px] m-2 relative"
+            key={CDNURL + user.id + "/" + track.name}
+          >
             <CardHeader className="flex justify-between">
-              <CardTitle className="w-4/6">
+              <CardTitle className="text-md">
                 {track.name.split("-")[0]}
               </CardTitle>
+              <div>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button className="  m-4" size="icon" variant="destructive">
+                      <Trash />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent classnName="relative">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Are you absolutely sure?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently
+                        delete this track from your account.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={(e) => deleteTrack(track.name)}
+                      >
+                        Continue
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
 
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    className="absolute top- right-0 m-4"
-                    size="icon"
-                    variant="destructive"
-                  >
-                    <Trash />
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent classnName="relative">
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Are you absolutely sure?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      this track from your account.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={(e) => deleteTrack(track.name)}>
-                      Continue
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-
-              <Button
-                className="absolute top- right-12 m-4"
-                onClick={(e) => saveTrack(track)}
-                size="icon"
-                variant="outline"
-              >
-                <ArrowDownToLine />
-              </Button>
+                <Button
+                  className=" m-4"
+                  onClick={(e) =>
+                    playTrack(CDNURL + user.id + "/" + track.name)
+                  }
+                  size="icon"
+                  variant="outline"
+                >
+                  <Play />
+                </Button>
+                <Button
+                  className=" m-4"
+                  onClick={(e) => saveTrack(track)}
+                  size="icon"
+                  variant="outline"
+                >
+                  <ArrowDownToLine />
+                </Button>
+              </div>
             </CardHeader>
-            <div className="flex justify-center">
+            {/* <div className="flex justify-center">
               <audio
                 className="w-5/6 h-10 mb-5 mt-4"
                 controls
@@ -259,10 +328,10 @@ const MusicGenPage = () => {
                 <source src={CDNURL + user.id + "/" + track.name} />
                 Your browser does not support the audio element.
               </audio>
-            </div>
+            </div> */}
           </Card>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };
