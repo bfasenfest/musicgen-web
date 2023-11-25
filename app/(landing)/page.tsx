@@ -54,9 +54,9 @@ const LandingPage = () => {
         </div>
       </h1>
 
-      <div className="absolute bottom-2 z-20">
+      <div className="absolute z-20 bottom-[200px] lg:bottom-2 w-full">
         <motion.div
-          className="flex justify-center"
+          className="flex justify-center "
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1 }}
@@ -64,7 +64,7 @@ const LandingPage = () => {
           <Link href={user ? "/musicgen" : "/sign-in"}>
             <Button
               variant="outline"
-              className="md:text-lg p-4 md:p-6 rounded-full font-semibold"
+              className=" text-2xl rounded-full font-semibold p-6 lg:text-lg"
             >
               Start Generating For Free
             </Button>
@@ -74,7 +74,7 @@ const LandingPage = () => {
         <LandingCards />
       </div>
 
-      <div className="absolute right-5 top-5">
+      <div className="absolute right-5 top-5 hidden md:block">
         {user ? (
           <Link href="/musicgen">
             <Button>Get Started!</Button>

@@ -16,22 +16,22 @@ const LandingCards = () => {
     {
       name: "Melody to Masterpiece",
       description:
-        "Transform your melody into a full-fledged song with our AI-driven composition tool. Input your basic melody, and watch as our AI extends it into a complete track.",
+        "Transform your melody into a full-fledged song with our AI-driven composition tool.",
     },
     {
-      name: "Style and Genre Transfer",
+      name: "Style  Transfer",
       description:
         "Simply input your style and mood preferences, and let the AI craft a unique piece tailored to your tastes.",
     },
 
     {
-      name: "Immersive Music Creation",
+      name: "Immersive Creation",
       description:
-        "Deep dive into the mechanics of music with our AI-powered analysis tool. Understand complex compositions, explore music theory, and learn from the masters. ",
+        "Deep dive into the mechanics of music with our AI-powered analysis tool:  explore music theory, and learn from the masters. ",
     },
   ];
   return (
-    <div className="px-10 py-10">
+    <div className="px-10 py-10 hidden lg:block">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {cards.map((item, i) => (
           <motion.div
@@ -42,7 +42,7 @@ const LandingCards = () => {
           >
             <Card
               key={item.description}
-              className="bg-[#192339] border-none text-white h-[200px]"
+              className="bg-[#192339] border-none text-white h-[250px]"
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-x-2">
