@@ -59,7 +59,7 @@ export default function DashboardPage() {
       </Card>
       <div className="flex flex-wrap items-center justify-center mt-4 drop-shadow-md ">
         {tracks.map((track) => (
-          <Card className=" w-[300px] h-[150px] relative m-2">
+          <Card className=" w-[300px] h-[150px] relative m-2" key={track.name}>
             <CardHeader className="flex justify-between">
               <CardTitle className="w-4/6 text-md">
                 {track.name.split("-")[0]}

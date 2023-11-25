@@ -60,7 +60,7 @@ const LandingPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1 }}
         >
-          <Link href={user ? "/dashboard" : "/sign-in"}>
+          <Link href={user ? "/musicgen" : "/sign-in"}>
             <Button
               variant="outline"
               className="md:text-lg p-4 md:p-6 rounded-full font-semibold"
@@ -75,7 +75,7 @@ const LandingPage = () => {
 
       <div className="absolute right-5 top-5">
         {user ? (
-          <Link href="/dashboard">
+          <Link href="/musicgen">
             <Button>Get Started!</Button>
           </Link>
         ) : (
