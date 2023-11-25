@@ -9,41 +9,36 @@ const LandingCards = () => {
 
   const cards = [
     {
-      name: "Joel",
-      avatar: "J",
-      title: "Software Engineer",
-      description: "This is the best application I've ever used!",
-    },
-    {
-      name: "Antonio",
-      avatar: "A",
-      title: "Designer",
-      description: "I use this daily for generating new photos!",
-    },
-    {
-      name: "Mark",
-      avatar: "M",
-      title: "CEO",
+      name: "Compose with AI",
       description:
-        "This app has changed my life, cannot imagine working without it!",
+        "Unleash your creativity with our advanced AI composition tool. Effortlessly create music across various genres. ",
     },
     {
-      name: "Mary",
-      avatar: "M",
-      title: "CFO",
+      name: "Melody to Masterpiece",
       description:
-        "The best in class, definitely worth the premium subscription!",
+        "Transform your melody into a full-fledged song with our AI-driven composition tool. Input your basic melody, and watch as our AI extends it into a complete track.",
+    },
+    {
+      name: "Style and Genre Transfer",
+      description:
+        "Simply input your style and mood preferences, and let the AI craft a unique piece tailored to your tastes.",
+    },
+
+    {
+      name: "Immersive Music Creation",
+      description:
+        "Deep dive into the mechanics of music with our AI-powered analysis tool. Understand complex compositions, explore music theory, and learn from the masters. ",
     },
   ];
   return (
-    <div className="px-10 pb-20 py-10">
+    <div className="px-10 py-10">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {cards.map((item, i) => (
           <motion.div
             key={item.description}
-            initial={{ opacity: 0, y: -75 }}
+            initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 + i / 8, delay: 1 }}
+            transition={{ duration: 1.5 + i / 4, delay: 2 }}
           >
             <Card
               key={item.description}
@@ -53,7 +48,6 @@ const LandingCards = () => {
                 <CardTitle className="flex items-center gap-x-2">
                   <div>
                     <p className="text-lg">{item.name}</p>
-                    <p className="text-zinc-400 text-sm">{item.title}</p>
                   </div>
                 </CardTitle>
                 <CardContent className="pt-4 px-0">

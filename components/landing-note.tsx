@@ -27,7 +27,8 @@ const LandingNote = () => {
       <primitive
         ref={ref}
         object={obj}
-        scale={[0.8, 0.8, 0.8]} // Change the scale as needed
+        scale={[0.4, 0.4, 0.4]} // Change the scale as needed
+        position={[0, 0.6, 0]} // Move the object slightly up in space
       />
     );
   };

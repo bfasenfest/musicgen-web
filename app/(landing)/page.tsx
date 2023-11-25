@@ -6,8 +6,12 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import LandingNote from "@/components/landing-note";
 import LandingCards from "@/components/landing-cards";
+import TypewriterComponent from "typewriter-effect";
+
+import { useUser } from "@supabase/auth-helpers-react";
 
 const LandingPage = () => {
+  const user = useUser();
   const noteOptions = ["note1.svg", "note2.svg", "note3.svg"];
 
   const notes = Array(10)
@@ -21,26 +25,64 @@ const LandingPage = () => {
   const durationValues = notes.map(() => 2 + Math.random() * 5);
 
   return (
-    <div className="bg-blue-100 h-full">
-      <h1 className="text-6xl md:text-8xl font-bold text-purple-600 text-center py-12">
-        <span className="font-extrabold text-purple-900">Music</span>Gen
-        <div className="text-sm md:text-xl font-light text-black mt-4">
-          Create beautiful music tracks with the latest AI models.
-        </div>
-      </h1>
+    <div className="bg-slate-700 h-full">
       <motion.div
-        className="h-[300px]"
+        className="h-full w-full absolute z-0"
         // initial={{ opacity: 0, y: -100 }}
         // animate={{ opacity: 1, y: 0 }}
         // transition={{ duration: 1 }}
       >
         <LandingNote />
       </motion.div>
-      <LandingCards />
+      <h1 className="text-6xl md:text-8xl font-bold text-purple-600 text-center py-12 ">
+        <span className="font-extrabold text-purple-200">Music</span>Gen
+        <div className="flex justify-center">
+          <div className="text-sm md:text-xl mt-4 flex items-center text-white">
+            <span>Create beautiful </span>
+            <span className=" bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600 ml-1">
+              <TypewriterComponent
+                options={{
+                  strings: ["Songs", "Melodies", "Ideas", "Art"],
+                  autoStart: true,
+                  loop: true,
+                }}
+              />
+            </span>{" "}
+            with the latest AI models.
+          </div>
+        </div>
+      </h1>
+
+      <div className="absolute bottom-2 z-20">
+        <motion.div
+          className="flex justify-center"
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 1 }}
+        >
+          <Link href={user ? "/dashboard" : "/sign-in"}>
+            <Button
+              variant="outline"
+              className="md:text-lg p-4 md:p-6 rounded-full font-semibold"
+            >
+              Start Generating For Free
+            </Button>
+          </Link>
+        </motion.div>
+
+        <LandingCards />
+      </div>
+
       <div className="absolute right-5 top-5">
-        <Link href="/sign-in">
-          <Button>Login</Button>
-        </Link>
+        {user ? (
+          <Link href="/dashboard">
+            <Button>Get Started!</Button>
+          </Link>
+        ) : (
+          <Link href="/sign-in">
+            <Button>Login</Button>
+          </Link>
+        )}
       </div>
     </div>
   );
