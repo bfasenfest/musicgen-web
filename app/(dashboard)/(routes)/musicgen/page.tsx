@@ -98,7 +98,6 @@ const MusicGenPage = () => {
       updateLoading(false);
     }
   };
-
   useEffect(() => {
     async function getLoader() {
       const { quantum } = await import("ldrs");
@@ -117,7 +116,7 @@ const MusicGenPage = () => {
     updateLoading(true);
     length = Math.round(trackLength * 50) || 5;
     const track = await axios.get(
-      `http://127.0.0.1:8000/?prompt=${prompt}&length=${length}`
+      `https://b7ab-174-91-189-208.ngrok-free.app/?prompt=${prompt}&length=${length}`
     );
     const { data, error } = await supabase.storage
       .from("tracks")
