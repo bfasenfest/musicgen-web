@@ -50,7 +50,7 @@ import { decode } from "base64-arraybuffer";
 
 import { useTrackStore } from "@/lib/store";
 
-import { quantum } from "ldrs";
+import { quantum, cardio } from "ldrs";
 
 quantum.register();
 
@@ -70,6 +70,7 @@ const MusicGenPage = () => {
 
   const [trackLength, updateTrackLength] = useState<number>();
   const [loading, updateLoading] = useState(false);
+  const [trackPlaying, updateTrackPlaying] = useState(false);
 
   const audioRef = useRef(null);
   const [AudioViz, init] = useVisualizer(audioRef);
@@ -145,11 +146,35 @@ const MusicGenPage = () => {
     }
   };
 
+  const initTrack = () => {
+    init();
+    updateTrackPlaying(true);
+
+    if (audioRef.current) {
+      audioRef.current.onended = () => {
+        updateTrackPlaying(false);
+      };
+      audioRef.current.onpause = () => {
+        updateTrackPlaying(false);
+      };
+    }
+  };
+
   const playTrack = (trackSrc: string) => {
     setCurrentTrack(trackSrc);
+    init();
+    updateTrackPlaying(true);
+
     if (audioRef.current) {
       audioRef.current.oncanplaythrough = () => {
         audioRef.current.play().catch((error) => console.log(error));
+        updateTrackPlaying(true);
+      };
+      audioRef.current.onended = () => {
+        updateTrackPlaying(false);
+      };
+      audioRef.current.onpause = () => {
+        updateTrackPlaying(false);
       };
       audioRef.current.load();
     }
@@ -230,8 +255,14 @@ const MusicGenPage = () => {
         </Card>
 
         <Card className="hidden md:block w-5/12 ml-5">
-          <div className=" h-60 ">
+          <div className=" h-60 relative ">
+            {!trackPlaying ? (
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2top">
+                <l-quantum size="75" speed="3" color="white" />
+              </div>
+            ) : null}
             <AudioViz
+              className="absolute inset-0 "
               model={models.horizontal({
                 darkMode: true,
                 reversed: false,
@@ -248,7 +279,7 @@ const MusicGenPage = () => {
               className="w-5/6 h-10 mb-5 mt-4"
               controls={true}
               ref={audioRef}
-              onPlay={init}
+              onPlay={initTrack}
               crossOrigin="anonymous"
               src={currentTrack}
             />
