@@ -12,17 +12,18 @@ import { useUser } from "@supabase/auth-helpers-react";
 
 const LandingPage = () => {
   const user = useUser();
-  const noteOptions = ["note1.svg", "note2.svg", "note3.svg"];
 
-  const notes = Array(10)
-    .fill(null)
-    .map(() => ({
-      src: noteOptions[Math.floor(Math.random() * noteOptions.length)],
-      size: 40,
-    }));
+  // const noteOptions = ["note1.svg", "note2.svg", "note3.svg"];
 
-  const yValues = notes.map(() => 100);
-  const durationValues = notes.map(() => 2 + Math.random() * 5);
+  // const notes = Array(10)
+  //   .fill(null)
+  //   .map(() => ({
+  //     src: noteOptions[Math.floor(Math.random() * noteOptions.length)],
+  //     size: 40,
+  //   }));
+
+  // const yValues = notes.map(() => 100);
+  // const durationValues = notes.map(() => 2 + Math.random() * 5);
 
   return (
     <div className="bg-slate-700 h-full">

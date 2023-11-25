@@ -50,10 +50,6 @@ import { decode } from "base64-arraybuffer";
 
 import { useTrackStore } from "@/lib/store";
 
-import { quantum, cardio } from "ldrs";
-
-quantum.register();
-
 type Track = {
   prompt: string;
   audio: string;
@@ -102,6 +98,14 @@ const MusicGenPage = () => {
       updateLoading(false);
     }
   };
+
+  useEffect(() => {
+    async function getLoader() {
+      const { quantum } = await import("ldrs");
+      quantum.register();
+    }
+    getLoader();
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -180,11 +184,11 @@ const MusicGenPage = () => {
     }
   };
 
-  const saveTrack = (track: Track) => {
-    const url = `data:audio/wav;base64, ${track.audio}`;
+  const saveTrack = (track) => {
+    const url = CDNURL + user.id + "/" + track.name;
     const link = document.createElement("a");
     link.href = url;
-    link.download = `${track.prompt}.wav`;
+    link.download = `${track.name}.wav`;
     link.click();
   };
 

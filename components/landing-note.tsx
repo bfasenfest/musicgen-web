@@ -1,10 +1,9 @@
 import { Canvas, useLoader, useFrame } from "@react-three/fiber";
-import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
+import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
 import { OrbitControls } from "@react-three/drei";
-import { MeshPhongMaterial, PointLight } from "three";
-import { grid } from "ldrs";
 
-grid.register();
+// import { grid } from "ldrs";
+// grid.register();
 
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";

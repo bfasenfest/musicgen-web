@@ -38,6 +38,16 @@ export default function DashboardPage() {
   const { tracks, setTracks } = useTrackStore();
   const user = useUser();
 
+  const saveTrack = (track: { name: string }) => {
+    if (user) {
+      const url = CDNURL + user.id + "/" + track.name;
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${track.name}.wav`;
+      link.click();
+    }
+  };
+
   return (
     <div className="mb-8 space-y-4 p-5">
       <Card className="w-full h-[200px]">
@@ -65,35 +75,6 @@ export default function DashboardPage() {
                 {track.name.split("-")[0]}
               </CardTitle>
 
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    className="absolute top- right-0 m-4"
-                    size="icon"
-                    variant="destructive"
-                  >
-                    <Trash />
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent classnName="relative">
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Are you absolutely sure?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      this track from your account.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={(e) => deleteTrack(track.name)}>
-                      Continue
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-
               <Button
                 className="absolute top- right-12 m-4"
                 onClick={(e) => saveTrack(track)}
@@ -107,9 +88,9 @@ export default function DashboardPage() {
               <audio
                 className="w-5/6 h-10 mb-5 absolute bottom-0"
                 controls
-                key={CDNURL + user.id + "/" + track.name}
+                key={CDNURL + user!.id + "/" + track.name}
               >
-                <source src={CDNURL + user.id + "/" + track.name} />
+                <source src={CDNURL + user!.id + "/" + track.name} />
                 Your browser does not support the audio element.
               </audio>
             </div>
