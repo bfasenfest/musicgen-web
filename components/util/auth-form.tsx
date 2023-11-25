@@ -24,7 +24,7 @@ export default function AuthForm() {
           },
         }}
         theme="dark"
-        redirectTo="/dashboard"
+        redirectTo="http://localhost:3000/dashboard"
       />
     </div>
   );

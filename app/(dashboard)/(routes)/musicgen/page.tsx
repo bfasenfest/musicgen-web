@@ -20,9 +20,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { ArrowDownToLine } from "lucide-react";
+import { ArrowDownToLine, Trash } from "lucide-react";
 
 import axios from "axios";
 
@@ -34,6 +46,8 @@ import { v4 as uuidv4 } from "uuid";
 
 import { decode } from "base64-arraybuffer";
 
+import { useTrackStore } from "@/lib/store";
+
 type Track = {
   prompt: string;
   audio: string;
@@ -43,7 +57,8 @@ const CDNURL =
   "https://qdciohgpchihhkgxlygz.supabase.co/storage/v1/object/public/tracks/";
 
 const MusicGenPage = () => {
-  const [tracks, setTracks] = useState<string[]>([]);
+  // const [tracks, setTracks] = useState<string[]>([]);
+  const { tracks, setTracks } = useTrackStore();
   const [prompt, updatePrompt] = useState();
   const [trackLength, updateTrackLength] = useState<number>();
   const [loading, updateLoading] = useState(false);
@@ -52,6 +67,8 @@ const MusicGenPage = () => {
   const supabase = useSupabaseClient();
 
   const getTracks = async () => {
+    if (!tracks) updateLoading(true);
+
     try {
       const { data: tracks } = await supabase.storage
         .from("tracks")
@@ -70,6 +87,7 @@ const MusicGenPage = () => {
     } catch (e) {
       alert(e);
     } finally {
+      updateLoading(false);
     }
   };
 
@@ -102,6 +120,18 @@ const MusicGenPage = () => {
     }
 
     updateLoading(false);
+  };
+
+  const deleteTrack = async (trackName: String) => {
+    const { error } = await supabase.storage
+      .from("tracks")
+      .remove([user?.id + "/" + trackName]);
+
+    if (error) {
+      alert(error);
+    } else {
+      getTracks();
+    }
   };
 
   const saveTrack = (track: Track) => {
@@ -181,8 +211,38 @@ const MusicGenPage = () => {
               <CardTitle className="w-4/6">
                 {track.name.split("-")[0]}
               </CardTitle>
+
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    className="absolute top- right-0 m-4"
+                    size="icon"
+                    variant="destructive"
+                  >
+                    <Trash />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent classnName="relative">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      this track from your account.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={(e) => deleteTrack(track.name)}>
+                      Continue
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+
               <Button
-                className="absolute top- right-0 m-4"
+                className="absolute top- right-12 m-4"
                 onClick={(e) => saveTrack(track)}
                 size="icon"
                 variant="outline"
@@ -192,7 +252,7 @@ const MusicGenPage = () => {
             </CardHeader>
             <div className="flex justify-center">
               <audio
-                className="w-5/6 h-10 mb-5"
+                className="w-5/6 h-10 mb-5 mt-4"
                 controls
                 key={CDNURL + user.id + "/" + track.name}
               >
