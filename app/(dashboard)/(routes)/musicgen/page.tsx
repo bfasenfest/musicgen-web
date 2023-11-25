@@ -116,7 +116,12 @@ const MusicGenPage = () => {
     updateLoading(true);
     length = Math.round(trackLength * 50) || 5;
     const track = await axios.get(
-      `https://b7ab-174-91-189-208.ngrok-free.app/?prompt=${prompt}&length=${length}`
+      `https://b7ab-174-91-189-208.ngrok-free.app/?prompt=${prompt}&length=${length}`,
+      {
+        headers: {
+          "ngrok-skip-browser-warning": "69420",
+        },
+      }
     );
     const { data, error } = await supabase.storage
       .from("tracks")
