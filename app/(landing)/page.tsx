@@ -48,8 +48,8 @@ const LandingPage = () => {
                   loop: true,
                 }}
               />
-            </span>{" "}
-            with the latest AI models.
+            </span>
+            <span className="mb-[1px]">with the latest AI models.</span>
           </div>
         </div>
       </h1>
