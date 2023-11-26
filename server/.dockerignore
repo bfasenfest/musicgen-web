@@ -1,0 +1,4 @@
+/misc
+/celery
+/__pycache__
+.env

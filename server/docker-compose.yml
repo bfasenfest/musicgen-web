@@ -1,0 +1,2 @@
+ngrok:
+  env_file: .env

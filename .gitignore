@@ -20,7 +20,10 @@
 .DS_Store
 *.pem
 TODO.md
+
+# server
 musicgen_out.wav
+ngrok-setup.ipynb
 
 # debug
 npm-debug.log*

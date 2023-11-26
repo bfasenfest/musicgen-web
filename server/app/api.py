@@ -33,4 +33,3 @@ def generate(prompt: str, length: int = 5):
 
     return Response(content=base64.b64encode(open("musicgen_out.wav", "rb").read()), media_type="audio/wav")
 
-# {"audio": base64.b64encode(open("musicgen_out.wav", "rb").read())}
