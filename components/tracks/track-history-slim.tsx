@@ -124,7 +124,7 @@ const TrackHistorySlim = ({
         ) : null}
 
         {tracks.map((track) => (
-          <div className=" w-full 3xl:w-[48%] m-2 ">
+          <div className=" w-full 3xl:w-[48%] m-2" key={track.url}>
             <div className="flex items-center justify-between border-b ">
               <div className="flex items-center">
                 <Button
