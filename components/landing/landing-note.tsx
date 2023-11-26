@@ -19,7 +19,7 @@ const LandingNote = () => {
     const ref = useRef();
 
     useFrame(({ clock }) => {
-      ref.current.rotation.y = clock.getElapsedTime() / 2;
+      ref.current!.rotation.y = clock.getElapsedTime() / 2;
     });
 
     return (

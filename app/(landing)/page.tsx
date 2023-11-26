@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import LandingNote from "@/components/landing-note";
-import LandingCards from "@/components/landing-cards";
+import LandingNote from "@/components/landing/landing-note";
+import LandingCards from "@/components/landing/landing-cards";
 import TypewriterComponent from "typewriter-effect";
 
 import { useUser } from "@supabase/auth-helpers-react";
