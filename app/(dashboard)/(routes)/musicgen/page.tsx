@@ -64,6 +64,8 @@ const MusicGenPage = () => {
   // const [tracks, setTracks] = useState<string[]>([]);
   const { tracks, setTracks } = useTrackStore();
   const [prompt, updatePrompt] = useState();
+  const [queue, setQueue] = useState<string[]>([]);
+
   const [currentTrack, setCurrentTrack] = useState();
 
   const [trackLength, updateTrackLength] = useState<number>();
@@ -116,6 +118,7 @@ const MusicGenPage = () => {
 
   const generateTrack = async (prompt: string) => {
     updateLoading(true);
+    setQueue((oldQueue) => [...oldQueue, prompt]);
     length = Math.round(trackLength) || 5;
     const track = await axios.get(
       `${API_URL}/?prompt=${prompt}&length=${length}`,
@@ -125,6 +128,7 @@ const MusicGenPage = () => {
         },
       }
     );
+
     const { data, error } = await supabase.storage
       .from("tracks")
       .upload(
@@ -134,14 +138,14 @@ const MusicGenPage = () => {
           contentType: "audio/wav",
         }
       );
+    setQueue((oldQueue) => oldQueue.filter((item) => item !== prompt));
 
     if (error) {
       alert(error);
     } else {
       getTracks();
     }
-
-    updateLoading(false);
+    if (queue.length === 0) updateLoading(false);
   };
 
   const deleteTrack = async (trackName: String) => {
@@ -258,6 +262,9 @@ const MusicGenPage = () => {
           </CardContent>
           <CardFooter className="flex justify-between">
             <Button variant="outline">Cancel</Button>
+            {loading
+              ? `Working on ${queue[0]} | tracks left ${queue.length}`
+              : null}
             <Button onClick={(e) => generateTrack(prompt || "")}>
               Generate
             </Button>
