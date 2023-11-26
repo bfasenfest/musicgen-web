@@ -133,15 +133,19 @@ const TopNav = () => {
                     </a>
                   </NavigationMenuLink>
                 </li>
-                <ListItem href="/dashboard" title="Dashboard">
-                  View the site dashboard and your generated tracks.
-                </ListItem>
+
                 <ListItem href="/musicgen" title="Text To Song">
                   Generate music from text prompts.
                 </ListItem>
                 <ListItem href="melodygen" title="Melody to Song">
                   Generate music from a recorded melody.
                 </ListItem>
+                <ListItem href="/replicate" title="Replicate Models">
+                  Experiment with different audio models from replicate
+                </ListItem>
+                {/* <ListItem href="/dashboard" title="Dashboard">
+                  View the site dashboard and your generated tracks.
+                </ListItem> */}
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
