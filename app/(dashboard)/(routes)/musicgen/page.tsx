@@ -185,7 +185,10 @@ const MusicGenPage = () => {
   };
 
   return (
-    <div className="dark">
+    <div
+      className="dark flex flex-col"
+      style={{ height: "calc(100vh - 140px)" }}
+    >
       <div className="flex items-center justify-center">
         <Card className=" w-5/6 md:w-3/6 ">
           <CardHeader>

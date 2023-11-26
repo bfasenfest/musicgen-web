@@ -52,15 +52,14 @@ const TrackHistorySlim = ({
       element.title = element.name.split("-")[0];
     }
 
+    // if element.metadata is a string (not an object), parse it
+    if (typeof element.metadata === "string") {
+      element.metadata = JSON.parse(element.metadata);
+    }
     if (element.metadata && !element.metadata.duration) {
       element.metadata.duration = Math.round(
         element.metadata.contentLength / 127237
       );
-    }
-
-    // if element.metadata is a string (not an object), parse it
-    if (typeof element.metadata === "string") {
-      element.metadata = JSON.parse(element.metadata);
     }
 
     if (element.metadata === null) {
@@ -111,9 +110,12 @@ const TrackHistorySlim = ({
   };
 
   return (
-    <div className="flex justify-center ">
+    <div
+      className="flex justify-center flex-grow "
+      style={{ height: "calc(100vh - 800px)" }}
+    >
       <div
-        className={`flex flex-wrap items-center justify-center  drop-shadow-md bg-white p-2 shadow rounded-lg w-5/6 h-[${height}px] mt-4 overflow-auto scrollbar-hide`}
+        className={`flex flex-wrap items-center justify-center flex-shrink-0 drop-shadow-md bg-white p-2 shadow rounded-lg w-5/6 h-full mt-4 overflow-auto scrollbar-hide`}
       >
         {loading ? (
           <div className="flex items-center justify-center drop-shadow-md w-full">
@@ -122,7 +124,7 @@ const TrackHistorySlim = ({
         ) : null}
 
         {tracks.map((track) => (
-          <div className=" w-full 3xl:w-[48%] m-2">
+          <div className=" w-full 3xl:w-[48%] m-2 ">
             <div className="flex items-center justify-between border-b ">
               <div className="flex items-center">
                 <Button
