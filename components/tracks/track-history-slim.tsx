@@ -1,15 +1,6 @@
 "use client";
 
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -27,9 +18,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { ArrowDownToLine, Trash, Play } from "lucide-react";
 
-import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
-import { supabaseClient } from "@/utils/supabase";
-import { useEffect, useState } from "react";
+import { useUser } from "@supabase/auth-helpers-react";
+
+import { Label } from "@/components/ui/label";
+import { Toggle } from "@/components/ui/toggle";
 
 type Track = {
   prompt: string;
@@ -45,6 +37,7 @@ const TrackHistorySlim = ({
   playTrack,
   deleteTrack,
   saveTrack,
+  height = 400,
 }) => {
   const user = useUser();
   if (!tracks) {
@@ -59,20 +52,20 @@ const TrackHistorySlim = ({
       element.title = element.name.split("-")[0];
     }
 
-    // if element.metadata is a string (not an object), parse it
-    if (typeof element.metadata === "string") {
-      element.metadata = JSON.parse(element.metadata);
-    }
-
-    if (!element.metadata.duration) {
+    if (element.metadata && !element.metadata.duration) {
       element.metadata.duration = Math.round(
         element.metadata.contentLength / 127237
       );
     }
 
+    // if element.metadata is a string (not an object), parse it
+    if (typeof element.metadata === "string") {
+      element.metadata = JSON.parse(element.metadata);
+    }
+
     if (element.metadata === null) {
       element.metadata = {
-        duration: "unknown",
+        duration: 5,
       };
     }
   });
@@ -110,7 +103,7 @@ const TrackHistorySlim = ({
     return result;
   };
 
-  const formatTrackLength = (seconds: number) => {
+  const formatTrackLength = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
 
@@ -118,16 +111,19 @@ const TrackHistorySlim = ({
   };
 
   return (
-    <div className="flex justify-center">
-      <div className="flex flex-wrap items-center justify-center mt-4 drop-shadow-md bg-white p-4 shadow rounded-lg w-5/6 ml-">
+    <div className="flex justify-center ">
+      <div
+        className={`flex flex-wrap items-center justify-center  drop-shadow-md bg-white p-2 shadow rounded-lg w-5/6 h-[${height}px] mt-4 overflow-auto scrollbar-hide`}
+      >
         {loading ? (
-          <div className="flex items-center justify-center drop-shadow-md">
-            <Skeleton className="h-[150px] w-[300px] m-2 " />{" "}
+          <div className="flex items-center justify-center drop-shadow-md w-full">
+            <Skeleton className="h-[50px] w-full m-2 " />
           </div>
         ) : null}
+
         {tracks.map((track) => (
           <div className=" w-full 3xl:w-[48%] m-2">
-            <div className="flex items-center justify-between p-2 border-b ">
+            <div className="flex items-center justify-between border-b ">
               <div className="flex items-center">
                 <Button
                   className="m-4"

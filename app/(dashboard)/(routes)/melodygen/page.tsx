@@ -22,6 +22,8 @@ import {
 
 import UserTrackHistory from "@/components/tracks/user-track-history";
 
+import TrackHistorySlim from "@/components/tracks/track-history-slim";
+
 import { ArrowDownToLine, Trash, Play } from "lucide-react";
 
 import { useVisualizer, models } from "react-audio-viz";
@@ -403,7 +405,7 @@ const MelodyGenPage = () => {
         <Card className="hidden md:block w-5/12 ml-5">
           <div className=" h-[400px] relative ">
             {!trackPlaying ? (
-              <div className="absolute top-20 left-1/2 transform -translate-x-1/2 -translate-y-1/2top">
+              <div className="absolute top-[180px] left-1/2 transform -translate-x-1/2 -translate-y-1/2top">
                 <l-quantum size="75" speed="3" color="white" />
               </div>
             ) : null}
@@ -433,12 +435,13 @@ const MelodyGenPage = () => {
         </Card>
       </div>
 
-      <UserTrackHistory
+      <TrackHistorySlim
         tracks={tracks}
         loading={loading}
         playTrack={playTrack}
         deleteTrack={deleteTrack}
         saveTrack={saveTrack}
+        height={200}
       />
     </div>
   );

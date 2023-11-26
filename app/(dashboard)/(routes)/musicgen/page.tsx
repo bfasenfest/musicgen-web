@@ -28,6 +28,7 @@ import { decode } from "base64-arraybuffer";
 import { useTrackStore } from "@/lib/store";
 
 import UserTrackHistory from "@/components/tracks/user-track-history";
+import TrackHistorySlim from "@/components/tracks/track-history-slim";
 
 type Track = {
   prompt: string;
@@ -270,7 +271,7 @@ const MusicGenPage = () => {
           </div>
         </Card>
       </div>
-      <UserTrackHistory
+      <TrackHistorySlim
         tracks={tracks}
         loading={loading}
         playTrack={playTrack}

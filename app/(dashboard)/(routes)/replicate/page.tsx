@@ -1,7 +1,5 @@
 "use client";
 
-import UserTrackHistory from "@/components/tracks/user-track-history";
-
 import {
   Card,
   CardContent,
@@ -30,7 +28,9 @@ import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 
 import { useTrackStore } from "@/lib/store";
 
-// import { promises as fs } from "fs";
+import UserTrackHistory from "@/components/tracks/user-track-history";
+
+import TrackHistorySlim from "@/components/tracks/track-history-slim";
 
 type Track = {
   created_at: string;
@@ -49,13 +49,15 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const ReplicatePage = () => {
   const { tracks, setTracks } = useTrackStore();
-  const [prompt, updatePrompt] = useState();
+  const [prompt, updatePrompt] = useState(
+    "Classic Rock, Drum Kit, Electric Guitar, Bass, Raw, Uplifting, Anthem"
+  );
   const [error, setError] = useState<string>();
   const [prediction, setPrediction] = useState();
   const [queue, setQueue] = useState<string[]>([]);
   const [currentTrack, setCurrentTrack] = useState();
 
-  const [trackLength, updateTrackLength] = useState<number>();
+  const [trackLength, updateTrackLength] = useState<number>(5);
   const [selectedModel, updateSelectedModel] = useState("large");
   const [topK, updateTopK] = useState<number>(250);
   const [topP, updateTopP] = useState<number>(0);
@@ -110,16 +112,21 @@ const ReplicatePage = () => {
     setQueue((oldQueue) => [...oldQueue, prompt]);
     length = Math.round(trackLength) || 5;
 
+    const metadata = JSON.stringify({
+      prompt: prompt,
+      duration: length,
+      model_version: selectedModel,
+      top_k: topK,
+      top_p: topP,
+      temperature: temp,
+    });
+
     const response = await fetch("/api/predictions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        prompt: prompt,
-        duration: length,
-        model_version: selectedModel,
-      }),
+      body: metadata,
     });
     let prediction = await response.json();
     if (response.status !== 201) {
@@ -143,10 +150,12 @@ const ReplicatePage = () => {
       setPrediction(prediction);
     }
     const blob = await fetch(prediction.output).then((r) => r.blob());
+
     const { data, error } = await supabase.from("replicate-tracks").insert({
       title: prompt,
       url: prediction.output,
       type: "basic",
+      metadata: metadata,
     });
 
     setQueue((oldQueue) => oldQueue.filter((item) => item !== prompt));
@@ -311,7 +320,7 @@ const ReplicatePage = () => {
         <Card className="hidden md:block w-5/12 ml-5">
           <div className=" h-[400px] relative ">
             {!trackPlaying ? (
-              <div className="absolute top-20 left-1/2 transform -translate-x-1/2 -translate-y-1/2top">
+              <div className="absolute top-[180px] left-1/2 transform -translate-x-1/2 -translate-y-1/2top">
                 <l-quantum size="75" speed="3" color="white" />
               </div>
             ) : null}
@@ -341,12 +350,13 @@ const ReplicatePage = () => {
         </Card>
       </div>
 
-      <UserTrackHistory
+      <TrackHistorySlim
         tracks={tracks}
         loading={loading}
         playTrack={playTrack}
         deleteTrack={deleteTrack}
         saveTrack={saveTrack}
+        height={200}
       />
     </div>
   );
