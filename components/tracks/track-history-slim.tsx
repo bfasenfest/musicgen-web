@@ -115,7 +115,7 @@ const TrackHistorySlim = ({
       style={{ height: "calc(100vh - 800px)" }}
     >
       <div
-        className={`flex flex-wrap items-center justify-center flex-shrink-0 drop-shadow-md bg-white p-2 shadow rounded-lg w-5/6 h-full mt-4 overflow-auto scrollbar-hide`}
+        className={`flex flex-wrap items-center justify-left flex-shrink-0 drop-shadow-md bg-white p-2 shadow rounded-lg w-5/6 h-full mt-4 overflow-auto scrollbar-hide`}
       >
         {loading ? (
           <div className="flex items-center justify-center drop-shadow-md w-full">
@@ -124,7 +124,7 @@ const TrackHistorySlim = ({
         ) : null}
 
         {tracks.map((track) => (
-          <div className=" w-full 3xl:w-[48%] m-2" key={track.url}>
+          <div className=" w-full 2xl:w-[48%] m-2" key={track.url}>
             <div className="flex items-center justify-between border-b ">
               <div className="flex items-center">
                 <Button
@@ -136,7 +136,12 @@ const TrackHistorySlim = ({
                   <Play />
                 </Button>
                 <div>
-                  <div className="text-sm font-bold text-gray-800">
+                  <div className="text-sm font-bold text-gray-800 hidden 2xl:block">
+                    {track.title.length > 60
+                      ? `${track.title.substring(0, 60)}...`
+                      : track.title}
+                  </div>
+                  <div className="text-sm font-bold text-gray-800 2xl:hidden">
                     {track.title}
                   </div>
                   <div className="text-xs text-gray-600">
