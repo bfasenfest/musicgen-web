@@ -58,6 +58,11 @@ const UserTrackHistory = ({
     if (!element.title) {
       element.title = element.name.split("-")[0];
     }
+
+    // if element.metadata is a string (not an object), parse it
+    if (typeof element.metadata === "string") {
+      element.metadata = JSON.parse(element.metadata);
+    }
   });
 
   console.log("Tracks: ", tracks);
