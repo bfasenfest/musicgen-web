@@ -20,6 +20,7 @@
 .DS_Store
 *.pem
 TODO.md
+musicgen_out.wav
 
 # debug
 npm-debug.log*
@@ -29,6 +30,7 @@ yarn-error.log*
 # local env files
 .env*.local
 .env
+auth.py
 
 # vercel
 .vercel
@@ -36,3 +38,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+#pycache
+*.pyc
+```
