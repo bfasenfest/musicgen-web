@@ -58,6 +58,8 @@ type Track = {
 const CDNURL =
   "https://qdciohgpchihhkgxlygz.supabase.co/storage/v1/object/public/tracks/";
 
+const API_URL = "https://3140-185-158-179-210.ngrok.io";
+
 const MusicGenPage = () => {
   // const [tracks, setTracks] = useState<string[]>([]);
   const { tracks, setTracks } = useTrackStore();
@@ -114,9 +116,9 @@ const MusicGenPage = () => {
 
   const generateTrack = async (prompt: string) => {
     updateLoading(true);
-    length = Math.round(trackLength * 50) || 5;
+    length = Math.round(trackLength) || 5;
     const track = await axios.get(
-      `https://b7ab-174-91-189-208.ngrok-free.app/?prompt=${prompt}&length=${length}`,
+      `${API_URL}/?prompt=${prompt}&length=${length}`,
       {
         headers: {
           "ngrok-skip-browser-warning": "69420",

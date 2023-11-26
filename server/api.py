@@ -1,4 +1,3 @@
-from auth import auth
 from fastapi import FastAPI, Request, Response, status
 from fastapi.middleware.cors import CORSMiddleware
 import torch
@@ -21,15 +20,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-model_url = "facebook/musicgen-large"
 device = "cuda"
 synthesiser = pipeline("text-to-audio", "facebook/musicgen-small", device=device)
 @app.get("/")
 
-def generate(prompt: str, length: int = 256):
+def generate(prompt: str, length: int = 5):
     print("Prompt: " + prompt)
     print("Length: " + str(length))
-    music = synthesiser(prompt, forward_params={"do_sample": True, "max_new_tokens": length})
+    music = synthesiser(prompt, forward_params={"do_sample": True, "max_new_tokens": length * 50})
     print("finishing generating")
     scipy.io.wavfile.write("musicgen_out.wav", rate=music["sampling_rate"], data=music["audio"])
 
