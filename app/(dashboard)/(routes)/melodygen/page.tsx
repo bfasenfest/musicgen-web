@@ -50,11 +50,12 @@ import { decode } from "base64-arraybuffer";
 
 import { useTrackStore } from "@/lib/store";
 
-import Replicate from "replicate";
-
 type Track = {
-  prompt: string;
-  audio: string;
+  created_at: string;
+  id: string;
+  title: string;
+  type: string;
+  url: string;
 };
 
 const CDNURL =
@@ -62,10 +63,14 @@ const CDNURL =
 
 const API_URL = "https://3140-185-158-179-210.ngrok.io";
 
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
 const MelodyGenPage = () => {
   const { tracks, setTracks } = useTrackStore();
   const [prompt, updatePrompt] = useState();
   const [queue, setQueue] = useState<string[]>([]);
+  const [prediction, setPrediction] = useState(null);
+  const [error, setError] = useState(null);
 
   const [currentTrack, setCurrentTrack] = useState();
 
@@ -79,25 +84,16 @@ const MelodyGenPage = () => {
   const user = useUser();
   const supabase = useSupabaseClient();
 
-  const replicate = new Replicate({
-    auth: process.env.REPLICATE_API_TOKEN,
-  });
-
   const getTracks = async () => {
     if (!tracks) updateLoading(true);
 
     try {
-      const { data: tracks } = await supabase.storage
-        .from("tracks")
-        .list(user?.id + "/melody/", {
-          limit: 30,
-          offset: 0,
-          sortBy: {
-            column: "created_at",
-            order: "desc",
-          },
-        });
-
+      const { data: tracks } = await supabase
+        .from("replicate-tracks")
+        .select()
+        .eq("id", user.id)
+        .eq("type", "melody");
+      console.log(tracks);
       if (tracks !== null) {
         setTracks(tracks);
       }
@@ -125,36 +121,44 @@ const MelodyGenPage = () => {
     updateLoading(true);
     setQueue((oldQueue) => [...oldQueue, prompt]);
     length = Math.round(trackLength) || 5;
-    const track = await replicate.run(
-      "meta/musicgen:7be0f12c54a8d033a0fbd14418c9af98962da9a86f5ff7811f9b3423a1f0b7d7",
-      {
-        input: {
-          top_k: 250,
-          top_p: 0,
-          prompt,
-          duration: length,
-          temperature: 1,
-          continuation: false,
-          model_version: "stereo-large",
-          output_format: "wav",
-          continuation_start: 0,
-          multi_band_diffusion: false,
-          normalization_strategy: "peak",
-          classifier_free_guidance: 3,
-        },
-      }
-    );
-    console.log(track);
+    const response = await fetch("/api/predictions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        prompt: prompt,
+        duration: length,
+      }),
+    });
+    let prediction = await response.json();
+    if (response.status !== 201) {
+      setError(prediction.detail);
+      return;
+    }
+    setPrediction(prediction);
 
-    const { data, error } = await supabase.storage
-      .from("tracks")
-      .upload(
-        user?.id + "/melody/" + `${prompt}-${uuidv4()}.wav`,
-        decode(track.data),
-        {
-          contentType: "audio/wav",
-        }
-      );
+    while (
+      prediction.status !== "succeeded" &&
+      prediction.status !== "failed"
+    ) {
+      await sleep(1000);
+      const response = await fetch("/api/predictions/" + prediction.id);
+      prediction = await response.json();
+      if (response.status !== 200) {
+        setError(prediction.detail);
+        return;
+      }
+      console.log({ prediction });
+      setPrediction(prediction);
+    }
+    const blob = await fetch(prediction.output).then((r) => r.blob());
+    const { data, error } = await supabase.from("replicate-tracks").insert({
+      title: prompt,
+      url: prediction.output,
+      type: "melody",
+    });
+
     setQueue((oldQueue) => oldQueue.filter((item) => item !== prompt));
 
     if (error) {
@@ -165,10 +169,11 @@ const MelodyGenPage = () => {
     if (queue.length === 0) updateLoading(false);
   };
 
-  const deleteTrack = async (trackName: String) => {
-    const { error } = await supabase.storage
-      .from("tracks")
-      .remove([user?.id + "/" + trackName]);
+  const deleteTrack = async (trackSrc: String) => {
+    const { error } = await supabase
+      .from("replicate-tracks")
+      .delete()
+      .eq("url", trackSrc);
 
     if (error) {
       alert(error);
@@ -211,11 +216,11 @@ const MelodyGenPage = () => {
     }
   };
 
-  const saveTrack = (track) => {
-    const url = CDNURL + user.id + "/" + track.name;
+  const saveTrack = (track: Track) => {
+    const url = track.url;
     const link = document.createElement("a");
     link.href = url;
-    link.download = `${track.name}.wav`;
+    link.download = `${track.title}.wav`;
     link.click();
   };
 
@@ -280,7 +285,7 @@ const MelodyGenPage = () => {
           <CardFooter className="flex justify-between">
             <Button variant="outline">Cancel</Button>
             {loading
-              ? `Working on ${queue[0]} | tracks left ${queue.length}`
+              ? `Working on ${queue[0]} | tracks left: ${queue.length}`
               : null}
             <Button onClick={(e) => generateTrack(prompt || "")}>
               Generate
@@ -328,14 +333,9 @@ const MelodyGenPage = () => {
           </div>
         ) : null}
         {tracks.map((track) => (
-          <Card
-            className="h-[150px] w-[300px] m-2 relative"
-            key={CDNURL + user.id + "/" + track.name}
-          >
+          <Card className="h-[150px] w-[300px] m-2 relative" key={track.url}>
             <CardHeader className="flex justify-between">
-              <CardTitle className="text-md">
-                {track.name.split("-")[0]}
-              </CardTitle>
+              <CardTitle className="text-md">{track.title}</CardTitle>
               <div>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
@@ -343,7 +343,7 @@ const MelodyGenPage = () => {
                       <Trash />
                     </Button>
                   </AlertDialogTrigger>
-                  <AlertDialogContent classnName="relative">
+                  <AlertDialogContent>
                     <AlertDialogHeader>
                       <AlertDialogTitle>
                         Are you absolutely sure?
@@ -356,7 +356,7 @@ const MelodyGenPage = () => {
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
                       <AlertDialogAction
-                        onClick={(e) => deleteTrack(track.name)}
+                        onClick={(e) => deleteTrack(track.url)}
                       >
                         Continue
                       </AlertDialogAction>
@@ -366,9 +366,7 @@ const MelodyGenPage = () => {
 
                 <Button
                   className=" m-4"
-                  onClick={(e) =>
-                    playTrack(CDNURL + user.id + "/" + track.name)
-                  }
+                  onClick={(e) => playTrack(track.url)}
                   size="icon"
                   variant="outline"
                 >

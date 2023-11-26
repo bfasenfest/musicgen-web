@@ -263,7 +263,7 @@ const MusicGenPage = () => {
           <CardFooter className="flex justify-between">
             <Button variant="outline">Cancel</Button>
             {loading
-              ? `Working on ${queue[0]} | tracks left ${queue.length}`
+              ? `Working on ${queue[0]} | tracks left: ${queue.length}`
               : null}
             <Button onClick={(e) => generateTrack(prompt || "")}>
               Generate

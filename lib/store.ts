@@ -1,11 +1,11 @@
 import { create } from "zustand";
 
 export type Track = {
+  created_at: string;
   id: string;
-  name: string;
-  created_at: Date;
-  updated_at: Date;
-  last_accessed_at: Date;
+  title: string;
+  type: string;
+  url: string;
 };
 
 export type TrackStore = {
