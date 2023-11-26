@@ -28,7 +28,7 @@ const LandingPage = () => {
   return (
     <div className="bg-slate-700 h-full">
       <motion.div
-        className="h-full w-full absolute z-0"
+        className="h-full w-full absolute z-0 hidden h-md:block"
         // initial={{ opacity: 0, y: -100 }}
         // animate={{ opacity: 1, y: 0 }}
         // transition={{ duration: 1 }}
@@ -54,27 +54,29 @@ const LandingPage = () => {
         </div>
       </h1>
 
-      <div className="absolute z-20 bottom-[200px] lg:bottom-2 w-full">
+      <div className="absolute z-20 bottom-[200px] lg:bottom-2 w-full ">
         <motion.div
           className="flex justify-center "
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1 }}
         >
-          <Link href={user ? "/musicgen" : "/sign-in"}>
-            <Button
-              variant="outline"
-              className=" text-2xl rounded-full font-semibold p-6 lg:text-lg"
-            >
-              Start Generating For Free
-            </Button>
-          </Link>
+          <div className="">
+            <Link href={user ? "/musicgen" : "/sign-in"}>
+              <Button
+                variant="outline"
+                className=" text-2xl rounded-full font-semibold p-6 h-lg:text-lg "
+              >
+                Start Generating For Free
+              </Button>
+            </Link>
+          </div>
         </motion.div>
 
         <LandingCards />
       </div>
 
-      <div className="absolute right-5 top-5 hidden md:block">
+      <div className="absolute right-5 top-5 hidden md:block ">
         {user ? (
           <Link href="/musicgen">
             <Button>Get Started!</Button>
