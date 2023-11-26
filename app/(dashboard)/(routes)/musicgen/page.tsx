@@ -241,7 +241,7 @@ const MusicGenPage = () => {
         <Card className="hidden md:block w-5/12 ml-5">
           <div className=" h-60 relative ">
             {!trackPlaying ? (
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2top">
+              <div className="absolute top-20 left-1/2 transform -translate-x-1/2 -translate-y-1/2top">
                 <l-quantum size="75" speed="3" color="white" />
               </div>
             ) : null}
