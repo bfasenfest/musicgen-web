@@ -40,7 +40,6 @@ const CDNURL =
 const API_URL = "https://3140-185-158-179-210.ngrok.io";
 
 const MusicGenPage = () => {
-  // const [tracks, setTracks] = useState<string[]>([]);
   const { tracks, setTracks } = useTrackStore();
   const [prompt, updatePrompt] = useState();
   const [queue, setQueue] = useState<string[]>([]);
@@ -127,7 +126,10 @@ const MusicGenPage = () => {
     if (queue.length === 0) updateLoading(false);
   };
 
-  const deleteTrack = async (trackName: String) => {
+  const deleteTrack = async (trackUrl: String) => {
+    console.log("Deleting track: ", trackUrl);
+    let trackName = trackUrl.split("/")[trackUrl.split("/").length - 1];
+    console.log("Deleting track: ", trackName);
     const { error } = await supabase.storage
       .from("tracks")
       .remove([user?.id + "/" + trackName]);

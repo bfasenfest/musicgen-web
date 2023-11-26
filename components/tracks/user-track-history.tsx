@@ -47,10 +47,20 @@ const UserTrackHistory = ({
   saveTrack,
 }) => {
   const user = useUser();
-  console.log("Tracks: ", tracks);
   if (!tracks) {
     tracks = [];
   }
+
+  tracks.forEach((element) => {
+    if (!element.url) {
+      element.url = CDNURL + user!.id + "/" + element.name;
+    }
+    if (!element.title) {
+      element.title = element.name.split("-")[0];
+    }
+  });
+
+  console.log("Tracks: ", tracks);
 
   return (
     <div className="flex flex-wrap items-center justify-center mt-4 drop-shadow-md">
@@ -60,14 +70,9 @@ const UserTrackHistory = ({
         </div>
       ) : null}
       {tracks.map((track) => (
-        <Card
-          className="h-[150px] w-[300px] m-2 relative"
-          key={CDNURL + user!.id + "/" + track.name}
-        >
+        <Card className="h-[150px] w-[300px] m-2 relative" key={track.url}>
           <CardHeader className="flex justify-between">
-            <CardTitle className="text-md">
-              {track.title || track.name.split("-")[0]}
-            </CardTitle>
+            <CardTitle className="text-md">{track.title}</CardTitle>
             <div>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
@@ -87,7 +92,7 @@ const UserTrackHistory = ({
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={(e) => deleteTrack(track.name)}>
+                    <AlertDialogAction onClick={(e) => deleteTrack(track.url)}>
                       Continue
                     </AlertDialogAction>
                   </AlertDialogFooter>
@@ -96,7 +101,7 @@ const UserTrackHistory = ({
 
               <Button
                 className=" m-4"
-                onClick={(e) => playTrack(CDNURL + user!.id + "/" + track.name)}
+                onClick={(e) => playTrack(track.url)}
                 size="icon"
                 variant="outline"
               >
