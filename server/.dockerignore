@@ -1,4 +1,5 @@
 /misc
 /celery
+/vast-setup
 /__pycache__
 .env

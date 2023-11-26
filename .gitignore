@@ -24,6 +24,7 @@ TODO.md
 # server
 musicgen_out.wav
 ngrok-setup.ipynb
+server/vast-setup
 
 # debug
 npm-debug.log*
