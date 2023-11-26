@@ -11,11 +11,11 @@ export default async function handler(req, res) {
     );
   }
   let input = {
-    top_k: 250,
-    top_p: 0,
+    top_k: req.body.top_k || 250,
+    top_p: req.body.top_p || 0,
     prompt: req.body.prompt,
     duration: req.body.duration,
-    temperature: 1,
+    temperature: req.body.temperature || 1,
     continuation: false,
     model_version: req.body.model_version,
     output_format: "wav",
