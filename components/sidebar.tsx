@@ -14,16 +14,28 @@ import { usePathname } from "next/navigation";
 
 const routes = [
   {
+    label: "Text To Song",
+    icon: ActivitySquare,
+    href: "/musicgen",
+    color: "text-green-500",
+  },
+  {
+    label: "Text To Melody",
+    icon: ActivitySquare,
+    href: "/melodygen",
+    color: "text-green-500",
+  },
+  {
+    label: "Replicate Playground",
+    icon: ActivitySquare,
+    href: "/replicate",
+    color: "text-green-500",
+  },
+  {
     label: "Dashboard",
     icon: LayoutDashboard,
     href: "/dashboard",
     color: "text-blue-500",
-  },
-  {
-    label: "Generate Music",
-    icon: ActivitySquare,
-    href: "/musicgen",
-    color: "text-green-500",
   },
   {
     label: "Help",

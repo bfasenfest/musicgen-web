@@ -140,7 +140,7 @@ const TopNav = () => {
                 <ListItem href="melodygen" title="Melody to Song">
                   Generate music from a recorded melody.
                 </ListItem>
-                <ListItem href="/replicate" title="Replicate Models">
+                <ListItem href="/replicate" title="Replicate Playground">
                   Experiment with different audio models from replicate
                 </ListItem>
                 {/* <ListItem href="/dashboard" title="Dashboard">
