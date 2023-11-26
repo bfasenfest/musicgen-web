@@ -20,21 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-
 import UserTrackHistory from "@/components/tracks/user-track-history";
-
-import { Skeleton } from "@/components/ui/skeleton";
 
 import { ArrowDownToLine, Trash, Play } from "lucide-react";
 
@@ -49,8 +35,6 @@ import { AudioRecorder } from "react-audio-voice-recorder";
 import { useTrackStore } from "@/lib/store";
 
 import { useDropzone } from "react-dropzone";
-
-// import { promises as fs } from "fs";
 
 type Track = {
   created_at: string;
