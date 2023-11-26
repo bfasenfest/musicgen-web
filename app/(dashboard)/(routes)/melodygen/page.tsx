@@ -370,7 +370,7 @@ const MelodyGenPage = () => {
                   <div {...getRootProps({ className: "dropzone" })}>
                     <input {...getInputProps()} />
                     <p>
-                      Drag 'n' drop some files here, or click to select files
+                      Drag and drop some files here, or click to select files
                     </p>
                   </div>
                   <aside>
@@ -450,7 +450,7 @@ const MelodyGenPage = () => {
       <div className="flex flex-wrap items-center justify-center mt-4 drop-shadow-md">
         {loading ? (
           <div className="flex items-center justify-center drop-shadow-md">
-            <Skeleton className="h-[150px] w-[300px] m-2 " />{" "}
+            <Skeleton className="h-[150px] w-[300px] m-2 " />
           </div>
         ) : null}
         {tracks.map((track) => (
