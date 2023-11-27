@@ -113,7 +113,9 @@ const TopNav = () => {
       <NavigationMenu className="hidden md:block justify-center">
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger>Generation</NavigationMenuTrigger>
+            <NavigationMenuTrigger className="outline">
+              Generation
+            </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[600px] lg:grid-cols-[.75fr_1fr]">
                 <li className="row-span-3">
@@ -124,7 +126,7 @@ const TopNav = () => {
                     >
                       <Image
                         alt="logo"
-                        src="/logo.png"
+                        src="/logo.svg"
                         width={80}
                         height={80}
                         className="rounded "
@@ -172,7 +174,7 @@ const TopNav = () => {
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <Link href="/guide" legacyBehavior passHref>
+            <Link href="/" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 User Guide
               </NavigationMenuLink>
