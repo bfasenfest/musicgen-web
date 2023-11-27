@@ -42,8 +42,6 @@ type Track = {
 const CDNURL =
   "https://qdciohgpchihhkgxlygz.supabase.co/storage/v1/object/public/tracks/";
 
-const API_URL = "https://6f30-206-125-129-213.ngrok-free.app";
-
 const MusicGenPage = () => {
   const { tracks, setTracks } = useTrackStore();
   const [prompt, updatePrompt] = useState();
@@ -107,14 +105,13 @@ const MusicGenPage = () => {
     setQueue((oldQueue) => [...oldQueue, prompt]);
 
     length = Math.round(trackLength) || 5;
-    const track = await axios.get(
-      `${API_URL}/?prompt=${prompt}&length=${length}`,
-      {
-        headers: {
-          "ngrok-skip-browser-warning": "69420",
-        },
-      }
-    );
+    prompt = prompt || "Classic Rock Anthem";
+
+    const track = await axios.post("/api/musicgen", {
+      user: user,
+      prompt: prompt,
+      length: length,
+    });
 
     // await incrementApiLimit(user, supabase);
 
