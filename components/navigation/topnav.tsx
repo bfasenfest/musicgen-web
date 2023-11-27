@@ -91,7 +91,7 @@ const TopNav = () => {
   ListItem.displayName = "ListItem";
   return (
     <div className="flex flex-wrap justify-between items-center p-4">
-      <div className="m4 flex">
+      <div className="m4 flex w-[45px] md:w-[80px]">
         <Image
           alt="logo"
           src="/logo.png"
@@ -105,7 +105,7 @@ const TopNav = () => {
       </div>
 
       <div className="md:hidden">
-        <h1 className="text-4xl font-bold text-purple-600">
+        <h1 className="text-2xl font-bold text-purple-600">
           <span className="font-extrabold text-purple-900">Music</span>Gen
         </h1>
       </div>
