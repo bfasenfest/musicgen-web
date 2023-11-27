@@ -1,36 +1,20 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# MusicGen Web UI
 
-## Getting Started
+This is a SaaS web app and basic backend server for generating tracks using MusicGen and Replicate's MusicGen API. It is currently being hosted at [MusicGen.xyz](https://www.musicgen.xyz/).
 
-First, run the development server:
+## Main App Architecture
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+The app is built using Next.js for the frontend, and Supabase for backend auth, database, and object storage. All files generated with text to song are made with the self-hosted backend server and then uploaded to each user's supabase storage, while text to melody and replicate playground generations are stored in a supabase table.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Server
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+For cost efficiency, the MusicGen small model is being run on a Vast.AI server using gunicorn to manage a single uvicorn worker for FastAPI. ngrok is used to create a static ip for use in the main app.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+You can view the server components as well as a Docker file for easy setup at `/server` as well as the basic FastAPI app at `/server/app`
 
-## Learn More
+## Roadmap
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- [ ] Visualize api limit in the app interface
+- [ ] Implement Stripe and a "pro" account to bypass api limit
+- [ ] Add account and billing pages
+- [ ] Add user guide
