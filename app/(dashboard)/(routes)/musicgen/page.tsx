@@ -42,7 +42,7 @@ type Track = {
 const CDNURL =
   "https://qdciohgpchihhkgxlygz.supabase.co/storage/v1/object/public/tracks/";
 
-const API_URL = process.env.API_SERVER_URL;
+const API_URL = "https://02fa-206-125-129-213.ngrok-free.app";
 
 const MusicGenPage = () => {
   const { tracks, setTracks } = useTrackStore();
@@ -97,7 +97,7 @@ const MusicGenPage = () => {
   }, [user]);
 
   const generateTrack = async (prompt: string) => {
-    const trial = await checkApiLimit(user, supabase);
+    // const trial = await checkApiLimit(user, supabase);
 
     // if (!trial) {
     //   return new NextResponse("Free trial has expired", { status: 403 });
