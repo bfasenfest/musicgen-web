@@ -114,9 +114,9 @@ const ReplicatePage = () => {
   const generateTrack = async (prompt: string) => {
     const trial = await checkApiLimit(user, supabase);
 
-    if (!trial) {
-      return new NextResponse("Free trial has expired", { status: 403 });
-    }
+    // if (!trial) {
+    //   return new NextResponse("Free trial has expired", { status: 403 });
+    // }
 
     updateLoading(true);
     setQueue((oldQueue) => [...oldQueue, prompt]);
