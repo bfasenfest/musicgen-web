@@ -3,7 +3,6 @@ import axios from "axios";
 export default async function handler(req, res) {
   const API_URL = process.env.VAST_SERVER_URL;
 
-  console.log(req.body);
   try {
     const { prompt, length, user } = req.body;
 
@@ -19,16 +18,17 @@ export default async function handler(req, res) {
       res.status(400).send("No Prompt");
     }
 
-    console.log("here");
     const response = await axios.get(
       `${API_URL}/?prompt=${prompt}&length=${length}`,
       {
+        timeout: 60000,
         headers: {
           "ngrok-skip-browser-warning": "69420",
         },
       }
     );
-    console.log(response);
+
+    console.log(response.data);
     res.statusCode = 200;
     res.end(JSON.stringify(response.data));
   } catch (error) {
