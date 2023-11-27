@@ -41,17 +41,17 @@ export const ApiCounter = ({
             <p>
               {apiLimitCount} / {MAX_FREE_COUNTS} Free Generations
             </p>
-            {/* <Progress
+            <Progress
               className="h-3"
               value={(apiLimitCount / MAX_FREE_COUNTS) * 100}
-            /> */}
+            />
           </div>
           <Button
             onClick={proModal.onOpen}
             variant="outline"
             className="w-full"
           >
-            Upgrade
+            Upgrade to Pro for Unlimited Generations
             <Zap className="w-4 h-4 ml-2 fill-white" />
           </Button>
         </CardContent>

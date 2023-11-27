@@ -22,7 +22,7 @@ import {
 import { cn } from "@/lib/utils";
 
 import ApiCounter from "@/components/api/ApiCounter";
-import { useApiLimit } from "@/lib/api-limit";
+// import { useApiLimit } from "@/lib/api-limit";
 import { useApiStore } from "@/lib/api-store";
 import { MAX_FREE_COUNTS } from "@/constants";
 // import { checkSubscription } from "@/lib/subscription";
@@ -107,7 +107,7 @@ const TopNav = () => {
   ListItem.displayName = "ListItem";
   return (
     <div className="flex flex-wrap justify-between items-center p-4">
-      <div className="m4 flex w-[45px] md:w-[60px]">
+      <div className="m4 flex w-[45px] md:w-[60px] ">
         <Image
           alt="logo"
           src="/logo.svg"
@@ -126,7 +126,7 @@ const TopNav = () => {
         </h1>
       </div>
 
-      <NavigationMenu className="hidden md:block justify-center ">
+      <NavigationMenu className="hidden md:block justify-center ml-[100px]">
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuTrigger>Generation</NavigationMenuTrigger>
@@ -187,7 +187,7 @@ const TopNav = () => {
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
-          <NavigationMenuItem>
+          <NavigationMenuItem className="hidden lg:block">
             <Link href="/" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 User Guide
@@ -195,11 +195,14 @@ const TopNav = () => {
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <Link href="/" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Api Usage {apiLimit} / {MAX_FREE_COUNTS}
-              </NavigationMenuLink>
-            </Link>
+            <NavigationMenuTrigger className={navigationMenuTriggerStyle()}>
+              Api Usage {apiLimit} / {MAX_FREE_COUNTS}
+            </NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-1 lg:w-[500px] ">
+                <ApiCounter isPro={false} apiLimitCount={apiLimit} />
+              </ul>
+            </NavigationMenuContent>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
