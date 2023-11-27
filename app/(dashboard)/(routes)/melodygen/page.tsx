@@ -294,7 +294,7 @@ const MelodyGenPage = () => {
       className="dark flex flex-col"
       style={{ height: "calc(100vh - 140px)" }}
     >
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center mt-2">
         <Card className=" w-5/6 md:w-3/6 ">
           <CardHeader>
             <div className="flex justify-between">
@@ -324,14 +324,36 @@ const MelodyGenPage = () => {
                     placeholder="Description of your music track. For Example: Classic Rock, Drum Kit, Electric Guitar, Bass, Raw, Uplifting, Anthem"
                   />
                 </div>
-                <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="name">Track Length (in seconds)</Label>
-                  <Input
-                    id="name"
-                    value={trackLength}
-                    onChange={(e) => updateTrackLength(e.target.value)}
-                    placeholder="Track length in seconds. For Example: 5"
-                  />
+
+                <div className="flex">
+                  <div className="flex flex-col flex-grow space-y-1.5 mr-10 mt-1">
+                    <Label htmlFor="name">Track Length (in seconds)</Label>
+                    <Input
+                      id="name"
+                      value={trackLength}
+                      onChange={(e) => updateTrackLength(e.target.value)}
+                      placeholder="Track length in seconds. For Example: 5"
+                    />
+                  </div>
+                  <div className="flex-grow">
+                    <Label htmlFor="framework">Select Model</Label>
+                    <Select
+                      onValueChange={(e) => updateSelectedModel(e.value)}
+                      defaultValue={selectedModel}
+                    >
+                      <SelectTrigger id="framework">
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent position="popper">
+                        <SelectItem value="melody-large">
+                          Melody Large
+                        </SelectItem>
+                        <SelectItem value="stereo-melody-large">
+                          Stereo Melody Large
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
                 <div className="flex ">
                   <div>
@@ -370,7 +392,7 @@ const MelodyGenPage = () => {
                     </div>
                   ) : null}
                 </div>
-                <section className="container outline-dashed hover:outline-blue-500 p-5 m-2 mt-3 w-5/6 cursor-pointer">
+                <section className="container outline-dashed outline-1 hover:outline-blue-500 p-2 m-2 mt-3 w-5/6 cursor-pointer">
                   <div {...getRootProps({ className: "dropzone" })}>
                     <input {...getInputProps()} />
                     <p>
@@ -386,24 +408,6 @@ const MelodyGenPage = () => {
                     ) : null}
                   </aside>
                 </section>
-
-                <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="framework">Select Model</Label>
-                  <Select
-                    onValueChange={(e) => updateSelectedModel(e.value)}
-                    defaultValue={selectedModel}
-                  >
-                    <SelectTrigger id="framework">
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent position="popper">
-                      <SelectItem value="melody-large">Melody Large</SelectItem>
-                      <SelectItem value="stereo-melody-large">
-                        Stereo Melody Large
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
               </div>
             </form>
           </CardContent>
@@ -419,7 +423,7 @@ const MelodyGenPage = () => {
         </Card>
 
         <Card className="hidden md:block w-5/12 ml-5">
-          <div className=" h-[400px] relative ">
+          <div className=" h-[350px] relative ">
             {!trackPlaying ? (
               <div className="absolute top-[180px] left-1/2 transform -translate-x-1/2 -translate-y-1/2top">
                 <l-quantum size="75" speed="3" color="white" />

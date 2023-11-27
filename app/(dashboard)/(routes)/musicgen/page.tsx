@@ -201,7 +201,7 @@ const MusicGenPage = () => {
       className="dark flex flex-col"
       style={{ height: "calc(100vh - 140px)" }}
     >
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center mt-2">
         <Card className=" w-5/6 md:w-3/6 ">
           <CardHeader>
             <div className="flex justify-between">

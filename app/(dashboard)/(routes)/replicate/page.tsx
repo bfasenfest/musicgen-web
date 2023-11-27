@@ -242,8 +242,8 @@ const ReplicatePage = () => {
       style={{ height: "calc(100vh - 140px)" }}
     >
       {" "}
-      <div className="flex items-center justify-center">
-        <Card className=" w-5/6 md:w-3/6 ">
+      <div className="flex items-center justify-center mt-2">
+        <Card className=" w-5/6 md:w-3/6  ">
           <CardHeader>
             <div className="flex justify-between">
               <div>
@@ -272,59 +272,65 @@ const ReplicatePage = () => {
                     placeholder="Description of your music track. For Example: Classic Rock, Drum Kit, Electric Guitar, Bass, Raw, Uplifting, Anthem"
                   />
                 </div>
-                <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="name">Track Length (in seconds)</Label>
-                  <Input
-                    id="name"
-                    value={trackLength}
-                    onChange={(e) => updateTrackLength(e.target.value)}
-                    placeholder="Track length in seconds. For Example: 5"
-                  />
+                <div className="flex">
+                  <div className="flex flex-col flex-grow space-y-1.5 mr-10">
+                    <Label htmlFor="name">Track Length (in seconds)</Label>
+                    <Input
+                      id="name"
+                      value={trackLength}
+                      onChange={(e) => updateTrackLength(e.target.value)}
+                      placeholder="Track length in seconds. For Example: 5"
+                    />
+                  </div>
+                  <div className="flex flex-col flex-grow space-y-1.5">
+                    <Label htmlFor="name">top_k (integer)</Label>
+                    <Input
+                      id="name"
+                      value={topK}
+                      onChange={(e) => updateTopK(e.target.value)}
+                      placeholder="Reduces sampling to the k most likely tokens."
+                    />
+                  </div>
                 </div>
-                <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="name">top_k (integer)</Label>
-                  <Input
-                    id="name"
-                    value={topK}
-                    onChange={(e) => updateTopK(e.target.value)}
-                    placeholder="Reduces sampling to the k most likely tokens."
-                  />
-                  <Label htmlFor="name">top_p (number)</Label>
-                  <Input
-                    id="name"
-                    value={topP}
-                    onChange={(e) => updateTopP(e.target.value)}
-                    placeholder="Reduces sampling to tokens with cumulative probability of p. When set to `0` (default), top_k sampling is used."
-                  />
-                  <Label htmlFor="name">Temperature (number)</Label>
-                  <Input
-                    id="name"
-                    value={temp}
-                    onChange={(e) => updateTemp(e.target.value)}
-                    placeholder="Controls the 'conservativeness' of the sampling process. Higher temperature means more diversity."
-                  />
-                </div>
-
-                <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="framework">Select Model</Label>
-                  <Select
-                    onValueChange={(e) => updateSelectedModel(e)}
-                    defaultValue={selectedModel}
-                  >
-                    <SelectTrigger id="framework">
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent position="popper">
-                      <SelectItem value="large">Large</SelectItem>
-                      <SelectItem value="stereo-large">Stereo Large</SelectItem>
-                    </SelectContent>
-                  </Select>
+                <div className="flex">
+                  <div className="flex flex-col flex-grow space-y-1.5 mr-10">
+                    <Label htmlFor="name">top_p (number)</Label>
+                    <Input
+                      id="name"
+                      value={topP}
+                      onChange={(e) => updateTopP(e.target.value)}
+                      placeholder="Reduces sampling to tokens with cumulative probability of p. When set to `0` (default), top_k sampling is used."
+                    />
+                  </div>
+                  <div className="flex flex-col flex-grow space-y-1.5">
+                    <Label htmlFor="name">Temperature (number)</Label>
+                    <Input
+                      id="name"
+                      value={temp}
+                      onChange={(e) => updateTemp(e.target.value)}
+                      placeholder="Controls the 'conservativeness' of the sampling process. Higher temperature means more diversity."
+                    />
+                  </div>
                 </div>
               </div>
             </form>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Button variant="outline">Cancel</Button>
+            <div className="flex flex-col space-y-1.5 w-[200px]">
+              <Label htmlFor="framework">Select Model</Label>
+              <Select
+                onValueChange={(e) => updateSelectedModel(e)}
+                defaultValue={selectedModel}
+              >
+                <SelectTrigger id="framework">
+                  <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent position="popper">
+                  <SelectItem value="large">Large</SelectItem>
+                  <SelectItem value="stereo-large">Stereo Large</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             {loading
               ? `Working on ${queue[0]} | tracks left: ${queue.length}`
               : null}
@@ -335,9 +341,9 @@ const ReplicatePage = () => {
         </Card>
 
         <Card className="hidden md:block w-5/12 ml-5">
-          <div className=" h-[400px] relative ">
+          <div className=" h-[335px] relative ">
             {!trackPlaying ? (
-              <div className="absolute top-[180px] left-1/2 transform -translate-x-1/2 -translate-y-1/2top">
+              <div className="absolute top-[150px] left-1/2 transform -translate-x-1/2 -translate-y-1/2top">
                 <l-quantum size="75" speed="3" color="white" />
               </div>
             ) : null}

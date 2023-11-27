@@ -115,7 +115,7 @@ const TrackHistorySlim = ({
       style={{ height: "calc(100vh - 800px)" }}
     >
       <div
-        className={`flex flex-wrap items-center justify-left flex-shrink-0 drop-shadow-md bg-white p-2 shadow rounded-lg w-5/6 h-full mt-4 overflow-auto scrollbar-hide`}
+        className={`flex flex-col items-start justify-left drop-shadow-md  p-2 shadow-2xl rounded-lg w-5/6  mt-4 overflow-auto scrollbar-hide`}
       >
         {loading ? (
           <div className="flex items-center justify-center drop-shadow-md w-full">
@@ -125,7 +125,7 @@ const TrackHistorySlim = ({
 
         {tracks.map((track) => (
           <div className=" w-full 3xl:w-[48%] m-2" key={track.url}>
-            <div className="flex items-center justify-between border-b ">
+            <div className="flex items-center justify-between border-b mr-4 ">
               <div className="flex items-center">
                 <Button
                   className="m-4"
