@@ -113,7 +113,7 @@ const TrackHistorySlim = ({
       style={{ height: "calc(100vh - 800px)" }}
     >
       <div
-        className={`flex flex-col items-start justify-left drop-shadow-md  outline-slate-400 outline outline-1 p-2 shadow-2xl rounded-lg w-5/6  mt-4 overflow-auto scrollbar-hide`}
+        className={`flex flex-col items-start justify-left   outline-slate-400 outline outline-1 p-2 shadow-2xl rounded-lg w-5/6  mt-4 overflow-auto scrollbar-hide`}
       >
         {loading ? (
           <div className="flex items-center justify-center drop-shadow-md w-full">
