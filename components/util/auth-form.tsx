@@ -24,7 +24,6 @@ export default function AuthForm() {
           },
         }}
         theme="dark"
-        redirectTo="/musicgen"
       />
     </div>
   );
