@@ -42,7 +42,7 @@ const LandingCards = () => {
           >
             <Card
               key={item.description}
-              className="bg-[#192339] border-none text-white h-[230px] hidden h-lg:block"
+              className="bg-[#2D464C] border-none text-white h-[230px] hidden h-lg:block"
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-x-2">

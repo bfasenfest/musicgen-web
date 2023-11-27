@@ -26,19 +26,19 @@ const LandingPage = () => {
   // const durationValues = notes.map(() => 2 + Math.random() * 5);
 
   return (
-    <div className="bg-slate-700 h-full">
+    <div className="bg-[D9D9D9] h-full">
       <motion.div
-        className="h-full w-full absolute z-0 hidden h-md:block"
+        className="h-full w-full  absolute z-0 hidden h-md:block"
         initial={{ opacity: 0, y: -100 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
       >
         <LandingNote />
       </motion.div>
-      <h1 className="text-6xl md:text-8xl font-bold text-purple-600 text-center py-12 ">
-        <span className="font-extrabold text-purple-200">Music</span>Gen
+      <h1 className="text-6xl md:text-8xl font-bold text-cyan-600 text-center py-12 ">
+        <span className="font-extrabold text-cyan-900">Music</span>Gen
         <div className="flex justify-center">
-          <div className="text-sm md:text-xl mt-4 flex items-center text-white">
+          <div className="text-sm md:text-xl mt-4 flex text-cyan-600 items-center ">
             <span>Create beautiful </span>
             <span className=" bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600 ml-1">
               <TypewriterComponent
@@ -65,7 +65,7 @@ const LandingPage = () => {
             <Link href={user ? "/musicgen" : "/sign-in"}>
               <Button
                 variant="outline"
-                className=" text-2xl rounded-full font-semibold p-6 h-lg:text-lg "
+                className=" text-2xl rounded-full font-semibold bg-slate-600 text-white p-6 h-lg:text-lg "
               >
                 Start Generating For Free
               </Button>
