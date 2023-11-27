@@ -34,7 +34,7 @@
     "fs": "^0.0.1-security",
     "ldrs": "^1.0.1",
     "lucide-react": "^0.292.0",
-    "next": "^14.0.4-canary.18",
+    "next": "^14.0.1",
     "next-transpile-modules": "^10.0.1",
     "react": "^18",
     "react-audio-visualize": "^1.1.3",
