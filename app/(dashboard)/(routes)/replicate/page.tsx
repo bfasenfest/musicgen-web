@@ -36,6 +36,8 @@ import { NextResponse } from "next/server";
 
 import { useApiStore } from "@/lib/api-store";
 
+import { useProModal } from "@/lib/pro-modal";
+
 type Track = {
   created_at: string;
   id: string;
@@ -76,6 +78,8 @@ const ReplicatePage = () => {
 
   const user = useUser();
   const supabase = useSupabaseClient();
+
+  const proModal = useProModal();
 
   // const { incrementApiLimit, checkApiLimit } = useApiLimit();
   const { apiLimit, incrementApiLimit, checkApiLimit, getApiLimitCount } =
@@ -121,7 +125,7 @@ const ReplicatePage = () => {
     const trial = await checkApiLimit(user, supabase);
 
     if (!trial) {
-      alert("Free trial has expired");
+      proModal.onOpen();
       return new NextResponse("Free trial has expired", { status: 403 });
     }
 

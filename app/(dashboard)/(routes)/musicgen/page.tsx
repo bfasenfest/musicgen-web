@@ -33,6 +33,8 @@ import { NextResponse } from "next/server";
 
 import { useApiStore } from "@/lib/api-store";
 
+import { useProModal } from "@/lib/pro-modal";
+
 type Track = {
   prompt: string;
   audio: string;
@@ -59,6 +61,8 @@ const MusicGenPage = () => {
 
   const user = useUser();
   const supabase = useSupabaseClient();
+
+  const proModal = useProModal();
 
   const { apiLimit, incrementApiLimit, checkApiLimit, getApiLimitCount } =
     useApiStore();
@@ -104,7 +108,7 @@ const MusicGenPage = () => {
     const trial = await checkApiLimit(user, supabase);
 
     if (!trial) {
-      alert("Free trial has expired");
+      proModal.onOpen();
       return new NextResponse("Free trial has expired", { status: 403 });
     }
 
