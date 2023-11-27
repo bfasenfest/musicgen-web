@@ -417,23 +417,12 @@ const MelodyGenPage = () => {
             </Button>
           </CardFooter>
         </Card>
-        <div className="w-5/12 h-4/6">
-          <TrackHistorySlim
-            tracks={tracks}
-            loading={loading}
-            playTrack={playTrack}
-            deleteTrack={deleteTrack}
-            saveTrack={saveTrack}
-            height={200}
-          />
-        </div>
-      </div>
-      <div className="flex justify-center ">
-        <Card className="hidden md:block w-11/12 m-5 absolute bottom-10">
-          <div className=" h-[150px] relative ">
+
+        <Card className="hidden md:block w-5/12 ml-5">
+          <div className=" h-[400px] relative ">
             {!trackPlaying ? (
-              <div className="absolute top-[50px] left-1/2 transform -translate-x-1/2 -translate-y-1/2top">
-                <l-quantum size="55" speed="3" color="white" />
+              <div className="absolute top-[180px] left-1/2 transform -translate-x-1/2 -translate-y-1/2top">
+                <l-quantum size="75" speed="3" color="white" />
               </div>
             ) : null}
             <AudioViz
@@ -443,7 +432,7 @@ const MelodyGenPage = () => {
                 reversed: false,
                 fadeBars: true,
                 scale: 0.9,
-                color: "#39A7FF",
+                color: "#F44E3B",
                 binSize: 25,
                 frequencyRange: [0, 16000],
               })}
@@ -461,6 +450,14 @@ const MelodyGenPage = () => {
           </div>
         </Card>
       </div>
+      <TrackHistorySlim
+        tracks={tracks}
+        loading={loading}
+        playTrack={playTrack}
+        deleteTrack={deleteTrack}
+        saveTrack={saveTrack}
+        height={200}
+      />
     </div>
   );
 };
