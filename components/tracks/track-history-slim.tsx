@@ -124,7 +124,7 @@ const TrackHistorySlim = ({
         ) : null}
 
         {tracks.map((track) => (
-          <div className=" w-full 2xl:w-[48%] m-2" key={track.url}>
+          <div className=" w-full 3xl:w-[48%] m-2" key={track.url}>
             <div className="flex items-center justify-between border-b ">
               <div className="flex items-center">
                 <Button
@@ -136,12 +136,17 @@ const TrackHistorySlim = ({
                   <Play />
                 </Button>
                 <div>
-                  <div className="text-sm font-bold text-gray-800 hidden 2xl:block">
+                  <div className="text-sm font-bold text-gray-800  block md:hidden">
+                    {track.title.length > 30
+                      ? `${track.title.substring(0, 30)}...`
+                      : track.title}
+                  </div>
+                  <div className="text-sm font-bold text-gray-800  hidden md:block lg:hidden">
                     {track.title.length > 60
                       ? `${track.title.substring(0, 60)}...`
                       : track.title}
                   </div>
-                  <div className="text-sm font-bold text-gray-800 2xl:hidden">
+                  <div className="text-sm font-bold text-gray-800 hidden lg:block">
                     {track.title}
                   </div>
                   <div className="text-xs text-gray-600">
@@ -150,7 +155,7 @@ const TrackHistorySlim = ({
                   </div>
                 </div>
               </div>
-              <div className="text-gray-500 text-xs">
+              <div className="text-gray-500 text-xs hidden md:block">
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button className="m-2" size="icon" variant="destructive">
