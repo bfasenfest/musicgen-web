@@ -164,6 +164,7 @@ const MelodyGenPage = () => {
     const trial = await checkApiLimit(user, supabase);
 
     if (!trial) {
+      alert("Free trial has expired");
       return new NextResponse("Free trial has expired", { status: 403 });
     }
 
