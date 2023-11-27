@@ -260,7 +260,13 @@ const MusicGenPage = () => {
             </form>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Button variant="outline" onClick={() => setQueue([])}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setQueue([]);
+                updateLoading(false);
+              }}
+            >
               Cancel
             </Button>
             <div className="m-5">

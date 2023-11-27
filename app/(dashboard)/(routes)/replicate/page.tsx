@@ -34,10 +34,7 @@ import TrackHistorySlim from "@/components/tracks/track-history-slim";
 
 import { NextResponse } from "next/server";
 
-import { useApiLimit } from "@/lib/api-limit";
-
 import { useApiStore } from "@/lib/api-store";
-import { get } from "http";
 
 type Track = {
   created_at: string;

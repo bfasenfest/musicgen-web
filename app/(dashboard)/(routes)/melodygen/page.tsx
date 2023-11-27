@@ -424,7 +424,15 @@ const MelodyGenPage = () => {
             </form>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Button variant="outline">Cancel</Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setQueue([]);
+                updateLoading(false);
+              }}
+            >
+              Cancel
+            </Button>
             <div className="m-5">
               {loading
                 ? `Working on ${queue[0]} | tracks left: ${queue.length}`
