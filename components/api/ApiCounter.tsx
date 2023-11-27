@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useProModal } from "@/lib/pro-modal";
 
-const ApiCounter = ({
+import { useApiLimit } from "@/lib/api-limit";
+
+export const ApiCounter = ({
   isPro = false,
   apiLimitCount = 0,
 }: {
@@ -16,6 +18,8 @@ const ApiCounter = ({
 }) => {
   const [mounted, setMounted] = useState(false);
   const proModal = useProModal();
+
+  //   apiLimitCount = 40;
 
   useEffect(() => {
     setMounted(true);
@@ -33,14 +37,14 @@ const ApiCounter = ({
     <div className="px-3">
       <Card className="bg-white/10 border-0">
         <CardContent className="py-6">
-          <div className="text-center text-sm text-white mb-4 space-y-2">
+          <div className="text-center text-sm text-black mb-4 space-y-2">
             <p>
               {apiLimitCount} / {MAX_FREE_COUNTS} Free Generations
             </p>
-            <Progress
+            {/* <Progress
               className="h-3"
               value={(apiLimitCount / MAX_FREE_COUNTS) * 100}
-            />
+            /> */}
           </div>
           <Button
             onClick={proModal.onOpen}
