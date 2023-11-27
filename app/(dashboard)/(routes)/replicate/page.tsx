@@ -32,6 +32,10 @@ import UserTrackHistory from "@/components/tracks/user-track-history";
 
 import TrackHistorySlim from "@/components/tracks/track-history-slim";
 
+import { NextResponse } from "next/server";
+
+import { incrementApiLimit, checkApiLimit } from "@/lib/api-limit";
+
 type Track = {
   created_at: string;
   id: string;
@@ -108,6 +112,12 @@ const ReplicatePage = () => {
   }, [user]);
 
   const generateTrack = async (prompt: string) => {
+    const trial = await checkApiLimit(user, supabase);
+
+    if (!trial) {
+      return new NextResponse("Free trial has expired", { status: 403 });
+    }
+
     updateLoading(true);
     setQueue((oldQueue) => [...oldQueue, prompt]);
     length = Math.round(trackLength) || 5;
@@ -128,6 +138,9 @@ const ReplicatePage = () => {
       },
       body: metadata,
     });
+
+    await incrementApiLimit(user, supabase);
+
     let prediction = await response.json();
     if (response.status !== 201) {
       setError(prediction.detail);

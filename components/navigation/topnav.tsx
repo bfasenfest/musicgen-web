@@ -21,6 +21,10 @@ import {
 
 import { cn } from "@/lib/utils";
 
+import ApiCounter from "@/components/api/ApiCounter";
+import { getApiLimitCount } from "@/lib/api-limit";
+// import { checkSubscription } from "@/lib/subscription";
+
 const components: { title: string; href: string; description: string }[] = [
   {
     title: "Account",
@@ -52,6 +56,8 @@ const TopNav = () => {
 
   const supabase = useSupabaseClient();
   const router = useRouter();
+
+  // const isPro = await checkSubscription();
 
   async function signOut() {
     router.push("/");

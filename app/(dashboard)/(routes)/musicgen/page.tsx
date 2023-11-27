@@ -30,6 +30,10 @@ import { useTrackStore } from "@/lib/store";
 import UserTrackHistory from "@/components/tracks/user-track-history";
 import TrackHistorySlim from "@/components/tracks/track-history-slim";
 
+import { NextResponse } from "next/server";
+
+import { incrementApiLimit, checkApiLimit } from "@/lib/api-limit";
+
 type Track = {
   prompt: string;
   audio: string;
@@ -96,6 +100,12 @@ const MusicGenPage = () => {
   }, [user]);
 
   const generateTrack = async (prompt: string) => {
+    const trial = await checkApiLimit(user, supabase);
+
+    if (!trial) {
+      return new NextResponse("Free trial has expired", { status: 403 });
+    }
+
     updateLoading(true);
     setQueue((oldQueue) => [...oldQueue, prompt]);
     length = Math.round(trackLength) || 5;
@@ -107,6 +117,8 @@ const MusicGenPage = () => {
         },
       }
     );
+
+    await incrementApiLimit(user, supabase);
 
     const { data, error } = await supabase.storage
       .from("tracks")

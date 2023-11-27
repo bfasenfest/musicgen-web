@@ -38,6 +38,10 @@ import { useTrackStore } from "@/lib/store";
 
 import { useDropzone } from "react-dropzone";
 
+import { NextResponse } from "next/server";
+
+import { incrementApiLimit, checkApiLimit } from "@/lib/api-limit";
+
 type Track = {
   created_at: string;
   id: string;
@@ -153,6 +157,12 @@ const MelodyGenPage = () => {
   }, [user]);
 
   const generateTrack = async (prompt: string) => {
+    const trial = await checkApiLimit(user, supabase);
+
+    if (!trial) {
+      return new NextResponse("Free trial has expired", { status: 403 });
+    }
+
     updateLoading(true);
     setQueue((oldQueue) => [...oldQueue, prompt]);
     length = Math.round(trackLength) || 5;
@@ -188,6 +198,9 @@ const MelodyGenPage = () => {
       setError(prediction.detail);
       return;
     }
+
+    await incrementApiLimit(user, supabase);
+
     setPrediction(prediction);
 
     while (
