@@ -27,7 +27,6 @@ import { decode } from "base64-arraybuffer";
 
 import { useTrackStore } from "@/lib/store";
 
-import UserTrackHistory from "@/components/tracks/user-track-history";
 import TrackHistorySlim from "@/components/tracks/track-history-slim";
 
 import { NextResponse } from "next/server";
@@ -41,6 +40,8 @@ type Track = {
 
 const CDNURL =
   "https://qdciohgpchihhkgxlygz.supabase.co/storage/v1/object/public/tracks/";
+
+const API_URL = "https://76b6-206-125-129-213.ngrok-free.app";
 
 const MusicGenPage = () => {
   const { tracks, setTracks } = useTrackStore();
@@ -112,11 +113,20 @@ const MusicGenPage = () => {
     length = Math.round(trackLength) || 5;
     prompt = prompt || "Classic Rock Anthem";
 
-    const track = await axios.post("/api/musicgen", {
-      user: user,
-      prompt: prompt,
-      length: length,
-    });
+    const track = await axios.get(
+      `${API_URL}/?prompt=${prompt}&length=${length}`,
+      {
+        headers: {
+          "ngrok-skip-browser-warning": "69420",
+        },
+      }
+    );
+
+    // const track = await axios.post("/api/musicgen", {
+    //   user: user,
+    //   prompt: prompt,
+    //   length: length,
+    // });
 
     await incrementApiLimit(user, supabase);
 
@@ -250,13 +260,14 @@ const MusicGenPage = () => {
             </form>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline" onClick={() => setQueue([])}>
+              Cancel
+            </Button>
             <div className="m-5">
               {loading
                 ? `Working on ${queue[0]} | tracks left: ${queue.length}`
                 : null}
             </div>
-
             <Button onClick={(e) => generateTrack(prompt || "")}>
               Generate
             </Button>
