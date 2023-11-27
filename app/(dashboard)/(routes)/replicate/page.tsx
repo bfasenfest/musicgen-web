@@ -34,7 +34,10 @@ import TrackHistorySlim from "@/components/tracks/track-history-slim";
 
 import { NextResponse } from "next/server";
 
-import { incrementApiLimit, checkApiLimit } from "@/lib/api-limit";
+import { useApiLimit } from "@/lib/api-limit";
+
+import { useApiStore } from "@/lib/api-store";
+import { get } from "http";
 
 type Track = {
   created_at: string;
@@ -77,6 +80,10 @@ const ReplicatePage = () => {
   const user = useUser();
   const supabase = useSupabaseClient();
 
+  // const { incrementApiLimit, checkApiLimit } = useApiLimit();
+  const { apiLimit, incrementApiLimit, checkApiLimit, getApiLimitCount } =
+    useApiStore();
+
   const getTracks = async () => {
     // if (!tracks) updateLoading(true);
 
@@ -108,15 +115,17 @@ const ReplicatePage = () => {
   useEffect(() => {
     if (user) {
       getTracks();
+      getApiLimitCount(user, supabase);
     }
   }, [user]);
 
   const generateTrack = async (prompt: string) => {
+    console.log("generating...");
     const trial = await checkApiLimit(user, supabase);
 
-    // if (!trial) {
-    //   return new NextResponse("Free trial has expired", { status: 403 });
-    // }
+    if (!trial) {
+      return new NextResponse("Free trial has expired", { status: 403 });
+    }
 
     updateLoading(true);
     setQueue((oldQueue) => [...oldQueue, prompt]);

@@ -40,7 +40,7 @@ import { useDropzone } from "react-dropzone";
 
 import { NextResponse } from "next/server";
 
-import { incrementApiLimit, checkApiLimit } from "@/lib/api-limit";
+import { useApiStore } from "@/lib/api-store";
 
 type Track = {
   created_at: string;
@@ -77,6 +77,9 @@ const MelodyGenPage = () => {
 
   const user = useUser();
   const supabase = useSupabaseClient();
+
+  const { apiLimit, incrementApiLimit, checkApiLimit, getApiLimitCount } =
+    useApiStore();
 
   const onDrop = useCallback((acceptedFiles) => {
     acceptedFiles.forEach((file) => {
@@ -153,15 +156,16 @@ const MelodyGenPage = () => {
   useEffect(() => {
     if (user) {
       getTracks();
+      getApiLimitCount(user, supabase);
     }
   }, [user]);
 
   const generateTrack = async (prompt: string) => {
     const trial = await checkApiLimit(user, supabase);
 
-    // if (!trial) {
-    //   return new NextResponse("Free trial has expired", { status: 403 });
-    // }
+    if (!trial) {
+      return new NextResponse("Free trial has expired", { status: 403 });
+    }
 
     updateLoading(true);
     setQueue((oldQueue) => [...oldQueue, prompt]);
@@ -171,6 +175,10 @@ const MelodyGenPage = () => {
     if (recording) {
       audio = await blobUrlToBase64(recording);
     } else {
+      if (acceptedFiles.length === 0) {
+        alert("Please provide an audio file");
+        return;
+      }
       audio = acceptedFiles[0].data;
     }
     console.log(acceptedFiles[0].data);

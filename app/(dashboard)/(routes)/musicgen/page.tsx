@@ -32,7 +32,7 @@ import TrackHistorySlim from "@/components/tracks/track-history-slim";
 
 import { NextResponse } from "next/server";
 
-import { incrementApiLimit, checkApiLimit } from "@/lib/api-limit";
+import { useApiStore } from "@/lib/api-store";
 
 type Track = {
   prompt: string;
@@ -59,6 +59,9 @@ const MusicGenPage = () => {
   const user = useUser();
   const supabase = useSupabaseClient();
 
+  const { apiLimit, incrementApiLimit, checkApiLimit, getApiLimitCount } =
+    useApiStore();
+
   const getTracks = async () => {
     try {
       const { data: tracks } = await supabase.storage
@@ -80,6 +83,7 @@ const MusicGenPage = () => {
     } finally {
     }
   };
+
   useEffect(() => {
     async function getLoader() {
       const { quantum } = await import("ldrs");
@@ -91,15 +95,16 @@ const MusicGenPage = () => {
   useEffect(() => {
     if (user) {
       getTracks();
+      getApiLimitCount(user, supabase);
     }
   }, [user]);
 
   const generateTrack = async (prompt: string) => {
-    // const trial = await checkApiLimit(user, supabase);
+    const trial = await checkApiLimit(user, supabase);
 
-    // if (!trial) {
-    //   return new NextResponse("Free trial has expired", { status: 403 });
-    // }
+    if (!trial) {
+      return new NextResponse("Free trial has expired", { status: 403 });
+    }
 
     updateLoading(true);
     setQueue((oldQueue) => [...oldQueue, prompt]);
@@ -113,7 +118,7 @@ const MusicGenPage = () => {
       length: length,
     });
 
-    // await incrementApiLimit(user, supabase);
+    await incrementApiLimit(user, supabase);
 
     const { data, error } = await supabase.storage
       .from("tracks")

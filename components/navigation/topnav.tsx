@@ -22,8 +22,12 @@ import {
 import { cn } from "@/lib/utils";
 
 import ApiCounter from "@/components/api/ApiCounter";
-import { getApiLimitCount } from "@/lib/api-limit";
+import { useApiLimit } from "@/lib/api-limit";
+import { useApiStore } from "@/lib/api-store";
+import { MAX_FREE_COUNTS } from "@/constants";
 // import { checkSubscription } from "@/lib/subscription";
+
+import { useEffect, useState } from "react";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -57,7 +61,19 @@ const TopNav = () => {
   const supabase = useSupabaseClient();
   const router = useRouter();
 
-  // const isPro = await checkSubscription();
+  const { apiLimit } = useApiStore();
+
+  // const { getApiLimitCount } = useApiLimit();
+  // const [apiLimitCount, setApiLimitCount] = useState(0);
+
+  // // const isPro = await checkSubscription();
+
+  // useEffect(() => {
+  //   async function getApiLimit() {
+  //     setApiLimitCount(await getApiLimitCount());
+  //   }
+  //   if (user) getApiLimit();
+  // }, []);
 
   async function signOut() {
     router.push("/");
@@ -175,6 +191,13 @@ const TopNav = () => {
             <Link href="/" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 User Guide
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link href="/" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Api Usage {apiLimit} / {MAX_FREE_COUNTS}
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
