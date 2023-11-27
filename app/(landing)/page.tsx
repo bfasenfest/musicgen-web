@@ -54,7 +54,7 @@ const LandingPage = () => {
         </div>
       </h1>
 
-      <div className="absolute z-20 bottom-[200px] lg:bottom-2 w-full ">
+      <div className="absolute z-20 bottom-[200px] lg:bottom-[10px] w-full ">
         <motion.div
           className="flex justify-center "
           initial={{ opacity: 0, y: -50 }}
@@ -65,7 +65,7 @@ const LandingPage = () => {
             <Link href={user ? "/musicgen" : "/sign-in"}>
               <Button
                 variant="outline"
-                className=" text-2xl rounded-full font-semibold bg-slate-600 text-white p-6 h-lg:text-lg "
+                className=" text-2xl rounded-full font-semibold bg-[#3b757f] hover:bg-[#5faab1] hover:text-white hover:scale-110 transition 0.5s text-white p-6 h-lg:text-lg "
               >
                 Start Generating For Free
               </Button>

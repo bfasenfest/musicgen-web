@@ -31,7 +31,7 @@ const LandingCards = () => {
     },
   ];
   return (
-    <div className="px-10 py-10 hidden lg:block">
+    <div className="px-10 py-5 h-xl:py-10 hidden lg:block">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {cards.map((item, i) => (
           <motion.div

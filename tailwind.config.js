@@ -19,7 +19,7 @@ module.exports = {
       screens: {
         "h-sm": { raw: "(min-height: 640px)" },
         "h-md": { raw: "(min-height: 768px)" },
-        "h-lg": { raw: "(min-height: 1024px)" },
+        "h-lg": { raw: "(min-height: 880px)" },
         "h-xl": { raw: "(min-height: 1280px)" },
       },
       colors: {
