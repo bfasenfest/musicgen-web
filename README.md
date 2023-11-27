@@ -18,3 +18,4 @@ You can view the server components as well as a Docker file for easy setup at `/
 - [ ] Implement Stripe and a "pro" account to bypass api limit
 - [ ] Add account and billing pages
 - [ ] Add user guide
+- [ ] Move from vast
