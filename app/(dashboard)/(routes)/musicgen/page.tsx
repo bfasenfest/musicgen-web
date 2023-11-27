@@ -62,8 +62,6 @@ const MusicGenPage = () => {
   const supabase = useSupabaseClient();
 
   const getTracks = async () => {
-    if (!tracks) updateLoading(true);
-
     try {
       const { data: tracks } = await supabase.storage
         .from("tracks")
@@ -82,7 +80,6 @@ const MusicGenPage = () => {
     } catch (e) {
       alert(e);
     } finally {
-      updateLoading(false);
     }
   };
   useEffect(() => {
@@ -105,9 +102,9 @@ const MusicGenPage = () => {
     // if (!trial) {
     //   return new NextResponse("Free trial has expired", { status: 403 });
     // }
-
     updateLoading(true);
     setQueue((oldQueue) => [...oldQueue, prompt]);
+
     length = Math.round(trackLength) || 5;
     const track = await axios.get(
       `${API_URL}/?prompt=${prompt}&length=${length}`,
@@ -118,7 +115,7 @@ const MusicGenPage = () => {
       }
     );
 
-    await incrementApiLimit(user, supabase);
+    // await incrementApiLimit(user, supabase);
 
     const { data, error } = await supabase.storage
       .from("tracks")
@@ -129,14 +126,20 @@ const MusicGenPage = () => {
           contentType: "audio/wav",
         }
       );
-    setQueue((oldQueue) => oldQueue.filter((item) => item !== prompt));
+
+    setQueue((oldQueue) => {
+      const newQueue = oldQueue.slice(1);
+      if (newQueue.length === 0) {
+        updateLoading(false);
+      }
+      return newQueue;
+    });
 
     if (error) {
       alert(error);
     } else {
       getTracks();
     }
-    if (queue.length === 0) updateLoading(false);
   };
 
   const deleteTrack = async (trackUrl: String) => {
@@ -245,9 +248,12 @@ const MusicGenPage = () => {
           </CardContent>
           <CardFooter className="flex justify-between">
             <Button variant="outline">Cancel</Button>
-            {loading
-              ? `Working on ${queue[0]} | tracks left: ${queue.length}`
-              : null}
+            <div className="m-5">
+              {loading
+                ? `Working on ${queue[0]} | tracks left: ${queue.length}`
+                : null}
+            </div>
+
             <Button onClick={(e) => generateTrack(prompt || "")}>
               Generate
             </Button>

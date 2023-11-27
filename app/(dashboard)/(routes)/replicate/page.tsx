@@ -78,7 +78,7 @@ const ReplicatePage = () => {
   const supabase = useSupabaseClient();
 
   const getTracks = async () => {
-    if (!tracks) updateLoading(true);
+    // if (!tracks) updateLoading(true);
 
     try {
       const { data: tracks } = await supabase
@@ -94,7 +94,7 @@ const ReplicatePage = () => {
     } catch (e) {
       alert(e);
     } finally {
-      updateLoading(false);
+      // updateLoading(false);
     }
   };
   useEffect(() => {
@@ -171,14 +171,18 @@ const ReplicatePage = () => {
       metadata: metadata,
     });
 
-    setQueue((oldQueue) => oldQueue.filter((item) => item !== prompt));
-
+    setQueue((oldQueue) => {
+      const newQueue = oldQueue.slice(1);
+      if (newQueue.length === 0) {
+        updateLoading(false);
+      }
+      return newQueue;
+    });
     if (error) {
       alert(error);
     } else {
       getTracks();
     }
-    if (queue.length === 0) updateLoading(false);
   };
 
   const deleteTrack = async (trackSrc: String) => {
@@ -331,9 +335,11 @@ const ReplicatePage = () => {
                 </SelectContent>
               </Select>
             </div>
-            {loading
-              ? `Working on ${queue[0]} | tracks left: ${queue.length}`
-              : null}
+            <div className="m-5">
+              {loading
+                ? `Working on ${queue[0]} | tracks left: ${queue.length}`
+                : null}
+            </div>
             <Button onClick={(e) => generateTrack(prompt || "")}>
               Generate
             </Button>

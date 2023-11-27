@@ -69,8 +69,6 @@ const TrackHistorySlim = ({
     }
   });
 
-  console.log("Tracks: ", tracks);
-
   const getTrackTime = (date: string) => {
     const futureDate = new Date(date);
     const now = new Date();
