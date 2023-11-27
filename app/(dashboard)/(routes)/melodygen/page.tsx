@@ -423,7 +423,11 @@ const MelodyGenPage = () => {
         </Card>
 
         <Card className="hidden md:block w-5/12 ml-5">
-          <div className=" h-[350px] relative ">
+          <div
+            className={`h-[370px] relative rounded-lg ${
+              trackPlaying ? "" : "bg-black"
+            }`}
+          >
             {!trackPlaying ? (
               <div className="absolute top-[180px] left-1/2 transform -translate-x-1/2 -translate-y-1/2top">
                 <l-quantum size="75" speed="3" color="white" />
