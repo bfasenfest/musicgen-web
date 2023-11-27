@@ -436,7 +436,7 @@ const MelodyGenPage = () => {
                 reversed: false,
                 fadeBars: true,
                 scale: 0.9,
-                color: "#F44E3B",
+                color: "#39A7FF",
                 binSize: 25,
                 frequencyRange: [0, 16000],
               })}
