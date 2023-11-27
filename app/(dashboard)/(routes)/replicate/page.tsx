@@ -9,8 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { headers } from "next/headers";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -54,9 +52,6 @@ const API_URL = "https://3140-185-158-179-210.ngrok.io";
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const ReplicatePage = () => {
-  //force dynamic rendering to bypass POST 405 bug
-  const headersList = headers();
-
   const { tracks, setTracks } = useTrackStore();
   const [prompt, updatePrompt] = useState(
     "Classic Rock, Drum Kit, Electric Guitar, Bass, Raw, Uplifting, Anthem"
