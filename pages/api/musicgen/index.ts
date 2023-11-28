@@ -1,6 +1,7 @@
 import axios from "axios";
+import { NextResponse } from "next/server";
 
-export default async function handler(req, res) {
+export async function POST(req, res) {
   const API_URL = process.env.VAST_SERVER_URL;
 
   try {
