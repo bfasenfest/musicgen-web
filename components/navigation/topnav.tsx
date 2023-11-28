@@ -61,19 +61,7 @@ const TopNav = () => {
   const supabase = useSupabaseClient();
   const router = useRouter();
 
-  const { apiLimit } = useApiStore();
-
-  // const { getApiLimitCount } = useApiLimit();
-  // const [apiLimitCount, setApiLimitCount] = useState(0);
-
-  // // const isPro = await checkSubscription();
-
-  // useEffect(() => {
-  //   async function getApiLimit() {
-  //     setApiLimitCount(await getApiLimitCount());
-  //   }
-  //   if (user) getApiLimit();
-  // }, []);
+  const { apiLimit, subscription } = useApiStore();
 
   async function signOut() {
     router.push("/");
@@ -200,7 +188,7 @@ const TopNav = () => {
             </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-1 lg:w-[500px] ">
-                <ApiCounter isPro={false} apiLimitCount={apiLimit} />
+                <ApiCounter subStatus={subscription} apiLimitCount={apiLimit} />
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>

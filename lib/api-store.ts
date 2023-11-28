@@ -5,7 +5,7 @@ import { User } from "@supabase/gotrue-js";
 
 type State = {
   apiLimit: number;
-  subscription: boolean;
+  subscription: string;
   setApiLimit: (apiLimit: number) => void;
   incrementApiLimit: (
     user: User | null,
@@ -27,7 +27,7 @@ type State = {
 
 export const useApiStore = create<State>((set) => ({
   apiLimit: 0,
-  subscription: false,
+  subscription: "trial",
   setApiLimit: (apiLimit) => set({ apiLimit }),
   incrementApiLimit: async (user, supabase) => {
     if (!user) {
@@ -79,26 +79,18 @@ export const useApiStore = create<State>((set) => ({
       return false;
     }
 
-    const { data: statusArray } = await supabase
+    const { data: status } = await supabase
       .from("subscriptions")
       .select()
       .eq("user_id", user.id)
-      .select("status");
+      .select("status")
+      .single();
 
-    console.log(statusArray);
-    const userSubscription = statusArray!.some(
-      (status) => status.status === "active"
-    );
+    const userSubscription = status!.status;
 
     console.log(userSubscription);
 
-    if (userSubscription) {
-      set({ subscription: true });
-      return true;
-    } else {
-      set({ subscription: false });
-      return false;
-    }
+    set({ subscription: userSubscription });
   },
   getApiLimitCount: async (user, supabase) => {
     if (!user) {
