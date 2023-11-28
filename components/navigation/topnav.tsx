@@ -32,13 +32,13 @@ import { useEffect, useState } from "react";
 const components: { title: string; href: string; description: string }[] = [
   {
     title: "Account",
-    href: "",
+    href: "/settings",
     description:
       "Manage your personal details, preferences, and access your user history",
   },
   {
     title: "Billing",
-    href: "",
+    href: "/settings",
     description:
       "View and manage your current plan, payment methods, and transaction history.",
   },
