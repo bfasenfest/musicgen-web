@@ -44,6 +44,7 @@
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
     "replicate": "^0.22.0",
+    "stripe": "^14.5.0",
     "tailwind-merge": "^2.0.0",
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.158.0",
