@@ -80,9 +80,14 @@ const ReplicatePage = () => {
 
   const proModal = useProModal();
 
-  // const { incrementApiLimit, checkApiLimit } = useApiLimit();
-  const { apiLimit, incrementApiLimit, checkApiLimit, getApiLimitCount } =
-    useApiStore();
+  const {
+    apiLimit,
+    subscription,
+    incrementApiLimit,
+    checkApiLimit,
+    getApiLimitCount,
+    checkSubscription,
+  } = useApiStore();
 
   const getTracks = async () => {
     // if (!tracks) updateLoading(true);
@@ -116,16 +121,20 @@ const ReplicatePage = () => {
     if (user) {
       getTracks();
       getApiLimitCount(user, supabase);
+      checkSubscription(user, supabase);
     }
   }, [user]);
 
   const generateTrack = async (prompt: string) => {
     console.log("generating...");
-    const trial = await checkApiLimit(user, supabase);
 
-    if (!trial) {
-      proModal.onOpen();
-      return new NextResponse("Free trial has expired", { status: 403 });
+    if (subscription !== "active") {
+      const trial = await checkApiLimit(user, supabase);
+
+      if (!trial) {
+        proModal.onOpen();
+        return new NextResponse("Free trial has expired", { status: 403 });
+      }
     }
 
     updateLoading(true);

@@ -81,8 +81,14 @@ const MelodyGenPage = () => {
 
   const proModal = useProModal();
 
-  const { apiLimit, incrementApiLimit, checkApiLimit, getApiLimitCount } =
-    useApiStore();
+  const {
+    apiLimit,
+    subscription,
+    incrementApiLimit,
+    checkApiLimit,
+    getApiLimitCount,
+    checkSubscription,
+  } = useApiStore();
 
   const onDrop = useCallback((acceptedFiles: any) => {
     acceptedFiles.forEach((file: any) => {
@@ -160,15 +166,18 @@ const MelodyGenPage = () => {
     if (user) {
       getTracks();
       getApiLimitCount(user, supabase);
+      checkSubscription(user, supabase);
     }
   }, [user]);
 
   const generateTrack = async (prompt: string) => {
-    const trial = await checkApiLimit(user, supabase);
+    if (subscription !== "active") {
+      const trial = await checkApiLimit(user, supabase);
 
-    if (!trial) {
-      proModal.onOpen();
-      return new NextResponse("Free trial has expired", { status: 403 });
+      if (!trial) {
+        proModal.onOpen();
+        return new NextResponse("Free trial has expired", { status: 403 });
+      }
     }
 
     updateLoading(true);
