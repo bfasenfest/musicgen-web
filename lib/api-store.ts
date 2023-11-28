@@ -1,7 +1,26 @@
 import { create } from "zustand";
 import { MAX_FREE_COUNTS } from "@/constants";
+import { SupabaseClient } from "@supabase/supabase-js";
+import { User } from "@supabase/gotrue-js";
 
-export const useApiStore = create((set) => ({
+type State = {
+  apiLimit: number;
+  setApiLimit: (apiLimit: number) => void;
+  incrementApiLimit: (
+    user: User | null,
+    supabase: SupabaseClient
+  ) => Promise<void>;
+  checkApiLimit: (
+    user: User | null,
+    supabase: SupabaseClient
+  ) => Promise<boolean>;
+  getApiLimitCount: (
+    user: User | null,
+    supabase: SupabaseClient
+  ) => Promise<void>;
+};
+
+export const useApiStore = create<State>((set) => ({
   apiLimit: 0,
   setApiLimit: (apiLimit) => set({ apiLimit }),
   incrementApiLimit: async (user, supabase) => {
@@ -15,7 +34,7 @@ export const useApiStore = create((set) => ({
       .eq("id", user.id)
       .select("api_limit");
 
-    const userApiLimit = data[0].api_limit;
+    const userApiLimit = data![0].api_limit;
 
     if (userApiLimit) {
       await supabase
@@ -39,7 +58,7 @@ export const useApiStore = create((set) => ({
       .eq("id", user.id)
       .select("api_limit");
 
-    const userApiLimit = data[0].api_limit;
+    const userApiLimit = data![0].api_limit;
 
     console.log(userApiLimit);
 
@@ -60,7 +79,7 @@ export const useApiStore = create((set) => ({
       .eq("id", user.id)
       .select("api_limit");
 
-    const userApiLimit = data[0].api_limit;
+    const userApiLimit = data![0].api_limit;
 
     if (!userApiLimit) {
       return 0;

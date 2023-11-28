@@ -13,15 +13,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+// @ts-ignore
 import { useVisualizer, models } from "react-audio-viz";
+// @ts-ignore
+import { v4 as uuidv4 } from "uuid";
 
 import axios from "axios";
 
 import { useEffect, useState, useRef } from "react";
 
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
-
-import { v4 as uuidv4 } from "uuid";
 
 import { decode } from "base64-arraybuffer";
 
@@ -35,10 +36,7 @@ import { useApiStore } from "@/lib/api-store";
 
 import { useProModal } from "@/lib/pro-modal";
 
-type Track = {
-  prompt: string;
-  audio: string;
-};
+import { Track, FileObject } from "@/types_db";
 
 const CDNURL =
   "https://qdciohgpchihhkgxlygz.supabase.co/storage/v1/object/public/tracks/";
@@ -47,11 +45,9 @@ const API_URL = "https://76b6-206-125-129-213.ngrok-free.app";
 
 const MusicGenPage = () => {
   const { tracks, setTracks } = useTrackStore();
-  const [prompt, updatePrompt] = useState();
+  const [prompt, updatePrompt] = useState<string>();
   const [queue, setQueue] = useState<string[]>([]);
-
-  const [currentTrack, setCurrentTrack] = useState();
-
+  const [currentTrack, setCurrentTrack] = useState<string>();
   const [trackLength, updateTrackLength] = useState<number>();
   const [loading, updateLoading] = useState(false);
   const [trackPlaying, updateTrackPlaying] = useState(false);
@@ -80,8 +76,10 @@ const MusicGenPage = () => {
           },
         });
 
+      const tracksAny: any = tracks;
+
       if (tracks !== null) {
-        setTracks(tracks);
+        setTracks(tracksAny);
       }
     } catch (e) {
       alert(e);
@@ -115,7 +113,7 @@ const MusicGenPage = () => {
     updateLoading(true);
     setQueue((oldQueue) => [...oldQueue, prompt]);
 
-    length = Math.round(trackLength) || 5;
+    length = Math.round(trackLength || 5);
     prompt = prompt || "Classic Rock Anthem";
 
     const track = await axios.get(
@@ -180,10 +178,12 @@ const MusicGenPage = () => {
     updateTrackPlaying(true);
 
     if (audioRef.current) {
-      audioRef.current.onended = () => {
+      const audioElement = audioRef.current as HTMLAudioElement;
+
+      audioElement.onended = () => {
         updateTrackPlaying(false);
       };
-      audioRef.current.onpause = () => {
+      audioElement.onpause = () => {
         updateTrackPlaying(false);
       };
     }
@@ -195,22 +195,24 @@ const MusicGenPage = () => {
     updateTrackPlaying(true);
 
     if (audioRef.current) {
-      audioRef.current.oncanplaythrough = () => {
-        audioRef.current.play().catch((error) => console.log(error));
+      const audioElement = audioRef.current as HTMLAudioElement;
+
+      audioElement.oncanplaythrough = () => {
+        audioElement.play().catch((error) => console.log(error));
         updateTrackPlaying(true);
       };
-      audioRef.current.onended = () => {
+      audioElement.onended = () => {
         updateTrackPlaying(false);
       };
-      audioRef.current.onpause = () => {
+      audioElement.onpause = () => {
         updateTrackPlaying(false);
       };
-      audioRef.current.load();
+      audioElement.load();
     }
   };
 
-  const saveTrack = (track) => {
-    const url = CDNURL + user.id + "/" + track.name;
+  const saveTrack = (track: Track) => {
+    const url = CDNURL + user!.id + "/" + track.name;
     const link = document.createElement("a");
     link.href = url;
     link.download = `${track.name}.wav`;
@@ -257,7 +259,7 @@ const MusicGenPage = () => {
                   <Input
                     id="name"
                     value={trackLength}
-                    onChange={(e) => updateTrackLength(e.target.value)}
+                    onChange={(e) => updateTrackLength(Number(e.target.value))}
                     placeholder="Track length in seconds. For Example: 5"
                   />
                 </div>

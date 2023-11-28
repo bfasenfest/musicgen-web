@@ -24,6 +24,7 @@ import TrackHistorySlim from "@/components/tracks/track-history-slim";
 
 import { ArrowDownToLine, Trash, Play } from "lucide-react";
 
+// @ts-ignore
 import { useVisualizer, models } from "react-audio-viz";
 
 import { useEffect, useState, useRef, useCallback } from "react";
@@ -55,15 +56,15 @@ const CDNURL =
 
 const API_URL = "https://3140-185-158-179-210.ngrok.io";
 
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 const MelodyGenPage = () => {
   const { tracks, setTracks } = useTrackStore();
-  const [prompt, updatePrompt] = useState();
+  const [prompt, updatePrompt] = useState<string>();
   const [error, setError] = useState<string>();
   const [prediction, setPrediction] = useState();
   const [queue, setQueue] = useState<string[]>([]);
-  const [currentTrack, setCurrentTrack] = useState();
+  const [currentTrack, setCurrentTrack] = useState<string>();
   const [trackLength, updateTrackLength] = useState<number>();
   const [selectedModel, updateSelectedModel] = useState("melody-large");
   const [loading, updateLoading] = useState(false);
@@ -83,8 +84,8 @@ const MelodyGenPage = () => {
   const { apiLimit, incrementApiLimit, checkApiLimit, getApiLimitCount } =
     useApiStore();
 
-  const onDrop = useCallback((acceptedFiles) => {
-    acceptedFiles.forEach((file) => {
+  const onDrop = useCallback((acceptedFiles: any) => {
+    acceptedFiles.forEach((file: any) => {
       const reader = new FileReader();
 
       reader.onabort = () => console.log("file reading was aborted");
@@ -101,7 +102,7 @@ const MelodyGenPage = () => {
     onDrop,
   });
 
-  const files = acceptedFiles.map((file) => (
+  const files = acceptedFiles.map((file: any) => (
     <li key={file.path}>
       {file.path} - {file.size} bytes
     </li>
@@ -112,7 +113,7 @@ const MelodyGenPage = () => {
     setRecording(url);
   };
 
-  const blobToBase64 = (blob) => {
+  const blobToBase64 = (blob: Blob) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onloadend = () => resolve(reader.result);
@@ -121,7 +122,7 @@ const MelodyGenPage = () => {
     });
   };
 
-  const blobUrlToBase64 = async (blobUrl) => {
+  const blobUrlToBase64 = async (blobUrl: string) => {
     const response = await fetch(blobUrl);
     const blob = await response.blob();
     return await blobToBase64(blob);
@@ -135,7 +136,7 @@ const MelodyGenPage = () => {
         .from("replicate-tracks")
         .select()
         .order("created_at", { ascending: false })
-        .eq("id", user.id)
+        .eq("id", user!.id)
         .eq("type", "melody");
 
       if (tracks !== null) {
@@ -172,7 +173,7 @@ const MelodyGenPage = () => {
 
     updateLoading(true);
     setQueue((oldQueue) => [...oldQueue, prompt]);
-    length = Math.round(trackLength) || 5;
+    length = Math.round(trackLength || 5);
     let audio = "";
 
     if (recording) {
@@ -267,10 +268,12 @@ const MelodyGenPage = () => {
     updateTrackPlaying(true);
 
     if (audioRef.current) {
-      audioRef.current.onended = () => {
+      const audioElement = audioRef.current as HTMLAudioElement;
+
+      audioElement.onended = () => {
         updateTrackPlaying(false);
       };
-      audioRef.current.onpause = () => {
+      audioElement.onpause = () => {
         updateTrackPlaying(false);
       };
     }
@@ -282,17 +285,19 @@ const MelodyGenPage = () => {
     updateTrackPlaying(true);
 
     if (audioRef.current) {
-      audioRef.current.oncanplaythrough = () => {
-        audioRef.current.play().catch((error) => console.log(error));
+      const audioElement = audioRef.current as HTMLAudioElement;
+
+      audioElement.oncanplaythrough = () => {
+        audioElement.play().catch((error) => console.log(error));
         updateTrackPlaying(true);
       };
-      audioRef.current.onended = () => {
+      audioElement.onended = () => {
         updateTrackPlaying(false);
       };
-      audioRef.current.onpause = () => {
+      audioElement.onpause = () => {
         updateTrackPlaying(false);
       };
-      audioRef.current.load();
+      audioElement.load();
     }
   };
 
@@ -346,7 +351,9 @@ const MelodyGenPage = () => {
                     <Input
                       id="name"
                       value={trackLength}
-                      onChange={(e) => updateTrackLength(e.target.value)}
+                      onChange={(e) =>
+                        updateTrackLength(Number(e.target.value))
+                      }
                       placeholder="Track length in seconds. For Example: 5"
                     />
                   </div>

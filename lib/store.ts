@@ -1,12 +1,6 @@
 import { create } from "zustand";
 
-export type Track = {
-  created_at: string;
-  id: string;
-  title: string;
-  type: string;
-  url: string;
-};
+import { Track } from "@/types_db";
 
 export type TrackStore = {
   tracks: Track[];

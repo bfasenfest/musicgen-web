@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+// @ts-ignore
 import { useVisualizer, models } from "react-audio-viz";
 
 import { useEffect, useState, useRef, useCallback } from "react";
@@ -27,8 +28,6 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 
 import { useTrackStore } from "@/lib/store";
-
-import UserTrackHistory from "@/components/tracks/user-track-history";
 
 import TrackHistorySlim from "@/components/tracks/track-history-slim";
 
@@ -51,7 +50,7 @@ const CDNURL =
 
 const API_URL = "https://3140-185-158-179-210.ngrok.io";
 
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 const ReplicatePage = () => {
   const { tracks, setTracks } = useTrackStore();
@@ -61,7 +60,7 @@ const ReplicatePage = () => {
   const [error, setError] = useState<string>();
   const [prediction, setPrediction] = useState();
   const [queue, setQueue] = useState<string[]>([]);
-  const [currentTrack, setCurrentTrack] = useState();
+  const [currentTrack, setCurrentTrack] = useState<string>();
 
   const [trackLength, updateTrackLength] = useState<number>(5);
   const [selectedModel, updateSelectedModel] = useState("large");
@@ -93,7 +92,7 @@ const ReplicatePage = () => {
         .from("replicate-tracks")
         .select()
         .order("created_at", { ascending: false })
-        .eq("id", user.id)
+        .eq("id", user!.id)
         .eq("type", "basic");
 
       if (tracks !== null) {
@@ -214,10 +213,12 @@ const ReplicatePage = () => {
     updateTrackPlaying(true);
 
     if (audioRef.current) {
-      audioRef.current.onended = () => {
+      const audioElement = audioRef.current as HTMLAudioElement;
+
+      audioElement.onended = () => {
         updateTrackPlaying(false);
       };
-      audioRef.current.onpause = () => {
+      audioElement.onpause = () => {
         updateTrackPlaying(false);
       };
     }
@@ -229,17 +230,19 @@ const ReplicatePage = () => {
     updateTrackPlaying(true);
 
     if (audioRef.current) {
-      audioRef.current.oncanplaythrough = () => {
-        audioRef.current.play().catch((error) => console.log(error));
+      const audioElement = audioRef.current as HTMLAudioElement;
+
+      audioElement.oncanplaythrough = () => {
+        audioElement.play().catch((error) => console.log(error));
         updateTrackPlaying(true);
       };
-      audioRef.current.onended = () => {
+      audioElement.onended = () => {
         updateTrackPlaying(false);
       };
-      audioRef.current.onpause = () => {
+      audioElement.onpause = () => {
         updateTrackPlaying(false);
       };
-      audioRef.current.load();
+      audioElement.load();
     }
   };
 
@@ -293,7 +296,9 @@ const ReplicatePage = () => {
                     <Input
                       id="name"
                       value={trackLength}
-                      onChange={(e) => updateTrackLength(e.target.value)}
+                      onChange={(e) =>
+                        updateTrackLength(Number(e.target.value))
+                      }
                       placeholder="Track length in seconds. For Example: 5"
                     />
                   </div>
@@ -302,7 +307,7 @@ const ReplicatePage = () => {
                     <Input
                       id="name"
                       value={topK}
-                      onChange={(e) => updateTopK(e.target.value)}
+                      onChange={(e) => updateTopK(Number(e.target.value))}
                       placeholder="Reduces sampling to the k most likely tokens."
                     />
                   </div>
@@ -313,7 +318,7 @@ const ReplicatePage = () => {
                     <Input
                       id="name"
                       value={topP}
-                      onChange={(e) => updateTopP(e.target.value)}
+                      onChange={(e) => updateTopP(Number(e.target.value))}
                       placeholder="Reduces sampling to tokens with cumulative probability of p. When set to `0` (default), top_k sampling is used."
                     />
                   </div>
@@ -322,7 +327,7 @@ const ReplicatePage = () => {
                     <Input
                       id="name"
                       value={temp}
-                      onChange={(e) => updateTemp(e.target.value)}
+                      onChange={(e) => updateTemp(Number(e.target.value))}
                       placeholder="Controls the 'conservativeness' of the sampling process. Higher temperature means more diversity."
                     />
                   </div>
