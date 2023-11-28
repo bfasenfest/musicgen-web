@@ -6,16 +6,23 @@ import { stripe } from "@/lib/stripe";
 import { absoluteUrl } from "@/lib/utils";
 import { createOrRetrieveCustomer } from "@/lib/supabaseAdmin";
 
-const settingsUrl = absoluteUrl("/settings");
+const settingsUrl = process.env.NEXT_PUBLIC_BASE_URL + "/settings";
 
 export async function POST(request: Request) {
-  const { price, quantity = 1, metadata = {} } = await request.json();
+  const {
+    price = "price_1OHZe4IfIPKRRCw85nMHO2Rv",
+    quantity = 1,
+    metadata = {},
+  } = await request.json();
 
   try {
     const supabase = createRouteHandlerClient({ cookies });
     const { data } = await supabase.auth.getUser();
 
-    const user: any = data;
+    const { user }: any = data;
+    console.log(user);
+    console.log(user.email);
+    console.log(user.id);
 
     const customer = await createOrRetrieveCustomer({
       email: user!.email,
@@ -35,11 +42,15 @@ export async function POST(request: Request) {
         },
       ],
       metadata,
-      success_url: `${settingsUrl}?success=true`,
-      cancel_url: `${absoluteUrl("/")}?canceled=true`,
+      success_url: `${settingsUrl}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}`,
     });
 
-    return NextResponse.json({ sessionId: session.id });
+    console.log(session);
+
+    console.log("URL: " + session.url);
+
+    return new NextResponse(JSON.stringify({ url: session.url }));
   } catch (error: any) {
     console.log(error);
     return new NextResponse("Internal Error", { status: 500 });
