@@ -58,12 +58,18 @@ const createOrRetrieveCustomer = async ({
   email: string;
   uuid: string;
 }) => {
+  console.log(`Looking up customer for ${uuid}.`);
   const { data, error } = await supabaseAdmin
     .from("customers")
-    .select("stripe_customer_id")
+    .select()
     .eq("id", uuid)
+    .select("stripe_customer_id")
     .single();
+
+  console.log(data);
+  console.log(data.stripe_customer_id);
   if (error || !data?.stripe_customer_id) {
+    console.log(`No customer found for ${uuid}. Creating one now.`);
     const customerData: { metadata: { supabaseUUID: string }; email?: string } =
       {
         metadata: {
@@ -121,6 +127,7 @@ const manageSubscriptionStatusChange = async (
     expand: ["default_payment_method"],
   });
   // Upsert the latest status of the subscription object.
+  console.log(subscription);
   const subscriptionData: Database["public"]["Tables"]["subscriptions"]["Insert"] =
     {
       id: subscription.id,

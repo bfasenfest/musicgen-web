@@ -1,68 +1,74 @@
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
-
 import { MAX_FREE_COUNTS } from "@/constants";
 
-export const incrementApiLimit = async (user, supabase) => {
-  if (!user.id) {
-    return;
-  }
+export const useApiLimit = () => {
+  const user = useUser();
+  const supabase = useSupabaseClient();
 
-  const { data } = await supabase
-    .from("users")
-    .select()
-    .eq("id", user.id)
-    .select("api_limit");
+  const incrementApiLimit = async () => {
+    if (!user.id) {
+      return;
+    }
 
-  const userApiLimit = data[0].api_limit;
-
-  if (userApiLimit) {
-    await supabase
+    const { data } = await supabase
       .from("users")
-      .update({ api_limit: userApiLimit + 1 })
-      .eq("id", user.id);
-  } else {
-    await supabase.from("users").update({ api_limit: 1 }).eq("id", user.id);
-  }
-};
+      .select()
+      .eq("id", user.id)
+      .select("api_limit");
 
-export const checkApiLimit = async (user, supabase) => {
-  if (!user.id) {
-    return false;
-  }
+    const userApiLimit = data[0].api_limit;
 
-  const { data } = await supabase
-    .from("users")
-    .select()
-    .eq("id", user.id)
-    .select("api_limit");
+    if (userApiLimit) {
+      await supabase
+        .from("users")
+        .update({ api_limit: userApiLimit + 1 })
+        .eq("id", user.id);
+    } else {
+      await supabase.from("users").update({ api_limit: 1 }).eq("id", user.id);
+    }
+  };
 
-  const userApiLimit = data[0].api_limit;
+  const checkApiLimit = async () => {
+    if (!user.id) {
+      return false;
+    }
 
-  console.log(userApiLimit);
+    const { data } = await supabase
+      .from("users")
+      .select()
+      .eq("id", user.id)
+      .select("api_limit");
 
-  if (!userApiLimit || userApiLimit.count < MAX_FREE_COUNTS) {
-    return true;
-  } else {
-    return false;
-  }
-};
+    const userApiLimit = data[0].api_limit;
 
-export const getApiLimitCount = async (user, supabase) => {
-  if (!user.id) {
-    return 0;
-  }
+    console.log(userApiLimit);
 
-  const { data } = await supabase
-    .from("users")
-    .select()
-    .eq("id", user.id)
-    .select("api_limit");
+    if (!userApiLimit || userApiLimit < MAX_FREE_COUNTS) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
-  const userApiLimit = data[0].api_limit;
+  const getApiLimitCount = async () => {
+    if (!user.id) {
+      return 0;
+    }
 
-  if (!userApiLimit) {
-    return 0;
-  }
+    const { data } = await supabase
+      .from("users")
+      .select()
+      .eq("id", user.id)
+      .select("api_limit");
 
-  return userApiLimit;
+    const userApiLimit = data[0].api_limit;
+
+    if (!userApiLimit) {
+      return 0;
+    }
+
+    return userApiLimit;
+  };
+
+  return { incrementApiLimit, checkApiLimit, getApiLimitCount };
 };
