@@ -20,8 +20,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import UserTrackHistory from "@/components/tracks/user-track-history";
-
 import TrackHistorySlim from "@/components/tracks/track-history-slim";
 
 import { ArrowDownToLine, Trash, Play } from "lucide-react";
@@ -41,6 +39,8 @@ import { useDropzone } from "react-dropzone";
 import { NextResponse } from "next/server";
 
 import { useApiStore } from "@/lib/api-store";
+
+import { useProModal } from "@/lib/pro-modal";
 
 type Track = {
   created_at: string;
@@ -77,6 +77,8 @@ const MelodyGenPage = () => {
 
   const user = useUser();
   const supabase = useSupabaseClient();
+
+  const proModal = useProModal();
 
   const { apiLimit, incrementApiLimit, checkApiLimit, getApiLimitCount } =
     useApiStore();
@@ -164,7 +166,7 @@ const MelodyGenPage = () => {
     const trial = await checkApiLimit(user, supabase);
 
     if (!trial) {
-      alert("Free trial has expired");
+      proModal.onOpen();
       return new NextResponse("Free trial has expired", { status: 403 });
     }
 
