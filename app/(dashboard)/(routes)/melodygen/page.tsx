@@ -174,7 +174,7 @@ const MelodyGenPage = () => {
     updateLoading(true);
     setQueue((oldQueue) => [...oldQueue, prompt]);
     length = Math.round(trackLength || 5);
-    let audio = "";
+    let audio: any = "";
 
     if (recording) {
       audio = await blobUrlToBase64(recording);
@@ -183,9 +183,9 @@ const MelodyGenPage = () => {
         alert("Please provide an audio file");
         return;
       }
+      // @ts-ignore
       audio = acceptedFiles[0].data;
     }
-    console.log(acceptedFiles[0].data);
 
     if (!audio) {
       alert("Please provide an audio file");
@@ -360,6 +360,7 @@ const MelodyGenPage = () => {
                   <div className="flex-grow">
                     <Label htmlFor="framework">Select Model</Label>
                     <Select
+                      /* @ts-ignore */
                       onValueChange={(e) => updateSelectedModel(e.value)}
                       defaultValue={selectedModel}
                     >
