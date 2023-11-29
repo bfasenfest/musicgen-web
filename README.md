@@ -14,8 +14,8 @@ You can view the server components as well as a Docker file for easy setup at `/
 
 ## Roadmap
 
-- [ ] Visualize api limit in the app interface
-- [ ] Implement Stripe and a "pro" account to bypass api limit
-- [ ] Add account and billing pages
+- [x] Visualize api limit in the app interface
+- [x] Implement Stripe and a "pro" account to bypass api limit
+- [x] Add account pages / stripe billing portal
 - [ ] Add user guide
 - [ ] Move from vast
