@@ -86,7 +86,7 @@ export const useApiStore = create<State>((set) => ({
       .select("status")
       .single();
 
-    const userSubscription = status!.status;
+    const userSubscription = status?.status || "trial";
 
     console.log(userSubscription);
 
