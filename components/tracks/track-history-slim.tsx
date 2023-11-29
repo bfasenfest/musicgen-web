@@ -38,6 +38,13 @@ const TrackHistorySlim = ({
   deleteTrack,
   saveTrack,
   height = 400,
+}: {
+  loading: boolean;
+  tracks: any[];
+  playTrack: (url: string) => void;
+  deleteTrack: (url: string) => void;
+  saveTrack: (track: any) => void;
+  height?: number;
 }) => {
   const user = useUser();
   if (!tracks) {
@@ -100,7 +107,7 @@ const TrackHistorySlim = ({
     return result;
   };
 
-  const formatTrackLength = (seconds) => {
+  const formatTrackLength = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
 
