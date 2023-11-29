@@ -22,6 +22,8 @@ import {
 
 import TrackHistorySlim from "@/components/tracks/track-history-slim";
 
+import TrackVisualizer from "@/components/tracks/track-viz";
+
 import { ArrowDownToLine, Trash, Play } from "lucide-react";
 
 // @ts-ignore
@@ -69,6 +71,7 @@ const MelodyGenPage = () => {
   const [selectedModel, updateSelectedModel] = useState("melody-large");
   const [loading, updateLoading] = useState(false);
   const [trackPlaying, updateTrackPlaying] = useState(false);
+  const [loadingSpeed, updateLoadingSpeed] = useState(4);
   const [recording, setRecording] = useState("");
 
   const audioRef = useRef(null);
@@ -274,24 +277,28 @@ const MelodyGenPage = () => {
 
   const initTrack = () => {
     init();
+    updateLoadingSpeed(1.5);
     updateTrackPlaying(true);
 
     if (audioRef.current) {
       const audioElement = audioRef.current as HTMLAudioElement;
 
       audioElement.onended = () => {
+        updateLoadingSpeed(4);
         updateTrackPlaying(false);
       };
       audioElement.onpause = () => {
+        updateLoadingSpeed(4);
         updateTrackPlaying(false);
       };
     }
   };
 
   const playTrack = (trackSrc: string) => {
+    updateTrackPlaying(false);
     setCurrentTrack(trackSrc);
     init();
-    updateTrackPlaying(true);
+    updateLoadingSpeed(1.5);
 
     if (audioRef.current) {
       const audioElement = audioRef.current as HTMLAudioElement;
@@ -301,9 +308,11 @@ const MelodyGenPage = () => {
         updateTrackPlaying(true);
       };
       audioElement.onended = () => {
+        updateLoadingSpeed(4);
         updateTrackPlaying(false);
       };
       audioElement.onpause = () => {
+        updateLoadingSpeed(4);
         updateTrackPlaying(false);
       };
       audioElement.load();
@@ -463,42 +472,15 @@ const MelodyGenPage = () => {
             </Button>
           </CardFooter>
         </Card>
-
-        <Card className="hidden md:block w-5/12 ml-5">
-          <div
-            className={`h-[370px] relative rounded-lg ${
-              trackPlaying ? "" : "bg-black"
-            }`}
-          >
-            {!trackPlaying ? (
-              <div className="absolute top-[180px] left-1/2 transform -translate-x-1/2 -translate-y-1/2top">
-                <l-quantum size="75" speed="3" color="white" />
-              </div>
-            ) : null}
-            <AudioViz
-              className="absolute inset-0 "
-              model={models.horizontal({
-                darkMode: true,
-                reversed: false,
-                fadeBars: true,
-                scale: 0.9,
-                color: "#39A7FF",
-                binSize: 25,
-                frequencyRange: [0, 16000],
-              })}
-            />
-          </div>
-          <div className="flex justify-center">
-            <audio
-              className="w-5/6 h-10 mb-5 mt-4"
-              controls={true}
-              ref={audioRef}
-              onPlay={initTrack}
-              crossOrigin="anonymous"
-              src={currentTrack}
-            />
-          </div>
-        </Card>
+        <TrackVisualizer
+          trackPlaying={trackPlaying}
+          audioRef={audioRef}
+          initTrack={initTrack}
+          currentTrack={currentTrack!}
+          loadingSpeed={loadingSpeed}
+          AudioViz={AudioViz}
+          height="370"
+        />
       </div>
       <TrackHistorySlim
         tracks={tracks}

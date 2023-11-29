@@ -17,8 +17,8 @@ const TrackVisualizer = ({
   initTrack: any;
   currentTrack: string;
   loadingSpeed: number;
-  AudioViz: React.ComponentType;
-  height: string;
+  AudioViz: any;
+  height?: string;
 }) => {
   return (
     <Card className="hidden md:block w-5/12 ml-5">
@@ -31,7 +31,7 @@ const TrackVisualizer = ({
           {!trackPlaying && (
             <motion.div
               key="audio-viz"
-              className="absolute top-20 left-[45%] transform -translate-y-1/2top"
+              className="absolute top-[40%] left-[45%] transform -translate-y-1/2top"
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0 }}
