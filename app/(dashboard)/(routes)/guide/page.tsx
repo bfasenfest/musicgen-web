@@ -105,7 +105,7 @@ Impact: A lower temperature (below 1) results in more conservative, predictable 
         <CardContent>
           <Accordion type="single" collapsible className="w-full">
             {accordionItems.map((item, i) => (
-              <AccordionItem value={`item-${i}` key={item.name}}>
+              <AccordionItem value={`item-${i}`} key={item.name}>
                 <AccordionTrigger className="text-xl">
                   {item.name}
                 </AccordionTrigger>
