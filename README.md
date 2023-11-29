@@ -18,4 +18,5 @@ You can view the server components as well as a Docker file for easy setup at `/
 - [x] Implement Stripe and a "pro" account to bypass api limit
 - [x] Add account pages / stripe billing portal
 - [ ] Add user guide
+- [ ] Save replicate tracks to supabase storage to avoid dead links
 - [ ] Move from vast
