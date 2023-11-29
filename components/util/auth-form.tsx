@@ -24,7 +24,7 @@ export default function AuthForm() {
           },
         }}
         theme="dark"
-        redirectTo="https://www.musicgen.xyz/musicgen"
+        redirectTo={process.env.NEXT_PUBLIC_BASE_URL + "/musicgen"}
       />
     </div>
   );
