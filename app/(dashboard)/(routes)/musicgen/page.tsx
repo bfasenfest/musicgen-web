@@ -41,7 +41,8 @@ import { Track, FileObject } from "@/types_db";
 const CDNURL =
   "https://qdciohgpchihhkgxlygz.supabase.co/storage/v1/object/public/tracks/";
 
-const API_URL = "https://76b6-206-125-129-213.ngrok-free.app";
+// Temporary API URL for testing
+const API_URL = "https://3bd7-149-36-0-187.ngrok-free.app";
 
 const MusicGenPage = () => {
   const { tracks, setTracks } = useTrackStore();
