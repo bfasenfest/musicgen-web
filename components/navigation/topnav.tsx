@@ -184,7 +184,13 @@ const TopNav = () => {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuTrigger className={navigationMenuTriggerStyle()}>
-              Api Usage {apiLimit} / {MAX_FREE_COUNTS}
+              {subscription === "active" ? (
+                <div>Subscription</div>
+              ) : (
+                <div>
+                  Api Usage {apiLimit} / {MAX_FREE_COUNTS}
+                </div>
+              )}
             </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-1 lg:w-[500px] ">
