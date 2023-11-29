@@ -42,6 +42,10 @@ import { useProModal } from "@/lib/pro-modal";
 
 import { Track, FileObject } from "@/types_db";
 
+import { RefreshCw } from "lucide-react";
+
+import generateMusicPrompt from "@/components/tracks/generate-prompt";
+
 const CDNURL =
   "https://qdciohgpchihhkgxlygz.supabase.co/storage/v1/object/public/tracks/";
 
@@ -267,7 +271,21 @@ const MusicGenPage = () => {
             <form>
               <div className="grid w-full items-center gap-4">
                 <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="name">Prompt</Label>
+                  <div>
+                    <Label htmlFor="name">Prompt</Label>
+                    <button
+                      className="ml-2 translate-y-0.5 hover:scale-105 transition duration-300 ease-in-out"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        updatePrompt(generateMusicPrompt());
+                      }}
+                    >
+                      <div className="flex">
+                        <RefreshCw className="w-4 h-4 mr-2 " />{" "}
+                      </div>
+                    </button>
+                  </div>
+
                   <Input
                     id="name"
                     value={prompt}
@@ -276,9 +294,9 @@ const MusicGenPage = () => {
                   />
                 </div>
                 <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="name">Track Length (in seconds)</Label>
+                  <Label htmlFor="length">Track Length (in seconds)</Label>
                   <Input
-                    id="name"
+                    id="length"
                     value={trackLength}
                     onChange={(e) => updateTrackLength(Number(e.target.value))}
                     placeholder="Track length in seconds. For Example: 5"

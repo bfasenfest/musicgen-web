@@ -45,6 +45,10 @@ import { useApiStore } from "@/lib/api-store";
 
 import { useProModal } from "@/lib/pro-modal";
 
+import { RefreshCw } from "lucide-react";
+
+import generateMusicPrompt from "@/components/tracks/generate-prompt";
+
 type Track = {
   created_at: string;
   id: string;
@@ -353,8 +357,19 @@ const MelodyGenPage = () => {
           <CardContent>
             <form>
               <div className="grid w-full items-center gap-4">
-                <div className="flex flex-col space-y-1.5">
+                <div>
                   <Label htmlFor="name">Prompt</Label>
+                  <button
+                    className="ml-2 translate-y-0.5 hover:scale-105 transition duration-300 ease-in-out"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      updatePrompt(generateMusicPrompt());
+                    }}
+                  >
+                    <div className="flex">
+                      <RefreshCw className="w-4 h-4 mr-2 " />{" "}
+                    </div>
+                  </button>
                   <Input
                     id="name"
                     value={prompt}
