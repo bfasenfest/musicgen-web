@@ -44,7 +44,7 @@ const components: { title: string; href: string; description: string }[] = [
   },
   {
     title: "About Us",
-    href: "",
+    href: "/about",
     description:
       "Discover our company's history, mission, and the team behind our services.",
   },
