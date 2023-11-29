@@ -23,9 +23,8 @@ const TrackVisualizer = ({
   return (
     <Card className="hidden md:block w-5/12 ml-5">
       <div
-        className={`h-[${height}px] relative  rounded-lg ${
-          trackPlaying ? "" : "bg-black"
-        }`}
+        className={` relative  rounded-lg ${trackPlaying ? "" : "bg-black"}`}
+        style={{ height: `${height}px` }}
       >
         <AnimatePresence>
           {!trackPlaying && (
