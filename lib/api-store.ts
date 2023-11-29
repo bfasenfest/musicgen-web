@@ -18,7 +18,7 @@ type State = {
   getApiLimitCount: (
     user: User | null,
     supabase: SupabaseClient
-  ) => Promise<void>;
+  ) => Promise<number>;
   checkSubscription: (
     user: User | null,
     supabase: SupabaseClient
@@ -91,6 +91,7 @@ export const useApiStore = create<State>((set) => ({
     console.log(userSubscription);
 
     set({ subscription: userSubscription });
+    return true;
   },
   getApiLimitCount: async (user, supabase) => {
     if (!user) {

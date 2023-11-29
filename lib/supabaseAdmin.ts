@@ -67,7 +67,7 @@ const createOrRetrieveCustomer = async ({
     .single();
 
   console.log(data);
-  console.log(data.stripe_customer_id);
+  console.log(data!.stripe_customer_id);
   if (error || !data?.stripe_customer_id) {
     console.log(`No customer found for ${uuid}. Creating one now.`);
     const customerData: { metadata: { supabaseUUID: string }; email?: string } =
