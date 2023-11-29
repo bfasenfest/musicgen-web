@@ -71,13 +71,13 @@ const GuidePage = () => {
         <br></br>
 
           <hr></hr>
-          <strong>Top_p</strong> (Number, Default: 0):
+          <strong>Top_p</strong> (Default: 0):
 
 Function: This setting uses a method called 'nucleus sampling,' where the AI only considers tokens that cumulatively make up a probability 'p'.           <br>
 
 Impact: When set to a value above 0, top_p allows for a dynamic range of token selections based on their cumulative probability, potentially leading to more varied and unexpected musical choices. When set to 0, it defaults to top_k sampling.
 <br></br><hr></hr>
-<strong>Temperature</strong> (Number, Default: 1):
+<strong>Temperature</strong> (Default: 1):
 
 Function: This setting controls the 'conservativeness' of the AI's token selection. It adjusts the probability distribution used for sampling.           <br>
 
@@ -105,7 +105,7 @@ Impact: A lower temperature (below 1) results in more conservative, predictable 
         <CardContent>
           <Accordion type="single" collapsible className="w-full">
             {accordionItems.map((item, i) => (
-              <AccordionItem value={`item-${i}`}>
+              <AccordionItem value={`item-${i}` key={item.name}}>
                 <AccordionTrigger className="text-xl">
                   {item.name}
                 </AccordionTrigger>
