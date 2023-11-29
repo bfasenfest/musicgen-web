@@ -176,7 +176,7 @@ const TopNav = () => {
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem className="hidden lg:block">
-            <Link href="/" legacyBehavior passHref>
+            <Link href="/guide" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 User Guide
               </NavigationMenuLink>
