@@ -83,6 +83,9 @@ const ProModal = () => {
                 <DialogDescription>
                   Free accounts are limited to 25 generations per month. Upgrade
                   to a Pro account for unlimited generations.
+                  <hr className="m-3" />
+                  Use card <strong>4242 4242 4242 4242</strong> with any other
+                  info to subscribe in the test environment
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>
