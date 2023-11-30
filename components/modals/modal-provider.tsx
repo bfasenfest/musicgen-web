@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import ProModal from "@/components/modals/pro-modal";
+import GuideModal from "@/components/modals/guide-modal";
 
 export const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -17,6 +18,7 @@ export const ModalProvider = () => {
 
   return (
     <>
+      <GuideModal />
       <ProModal />
     </>
   );

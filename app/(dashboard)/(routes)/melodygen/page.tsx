@@ -43,7 +43,7 @@ import { NextResponse } from "next/server";
 
 import { useApiStore } from "@/lib/api-store";
 
-import { useProModal } from "@/lib/pro-modal";
+import { useProModal } from "@/lib/modal-store";
 
 import { RefreshCw } from "lucide-react";
 

@@ -27,6 +27,8 @@ import { useApiStore } from "@/lib/api-store";
 import { MAX_FREE_COUNTS } from "@/constants";
 // import { checkSubscription } from "@/lib/subscription";
 
+import { useGuideModal } from "@/lib/modal-store";
+
 import { useEffect, useState } from "react";
 
 const components: { title: string; href: string; description: string }[] = [
@@ -60,6 +62,8 @@ const TopNav = () => {
 
   const supabase = useSupabaseClient();
   const router = useRouter();
+
+  const guideModal = useGuideModal();
 
   const { apiLimit, subscription } = useApiStore();
 

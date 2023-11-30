@@ -15,7 +15,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Zap } from "lucide-react";
 
-import { useProModal } from "@/lib/pro-modal";
+import { useProModal } from "@/lib/modal-store";
 
 import { useState } from "react";
 import { useEffect } from "react";
