@@ -41,8 +41,8 @@ export default function AboutPage() {
               , where our small yet vibrant team shares a profound passion for
               revolutionizing music creation through Artificial Intelligence. We
               are a group of innovators, musicians, engineers, and dreamers
-              committed to pushing the boundaries of what`&apos;`s possible in
-              AI music generation and development.
+              committed to pushing the boundaries of what&apos;s possible in AI
+              music generation and development.
             </p>
             <br />
             <p>
@@ -90,7 +90,7 @@ export default function AboutPage() {
                 Gen
               </span>
               . We are thrilled to have you join us on this exciting journey of
-              musical exploration and discovery. Let`&apos;`s create something
+              musical exploration and discovery. Let&apos;s create something
               amazing together!
             </p>
           </div>
