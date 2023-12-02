@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     duration: req.body.duration,
     temperature: req.body.temperature || 1,
     continuation: false,
-    model_version: req.body.model_version,
+    model_version: req.body.model_version || "large",
     output_format: "wav",
     continuation_start: 0,
     multi_band_diffusion: false,

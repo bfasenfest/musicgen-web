@@ -52,6 +52,8 @@ const CDNURL =
 // Temporary API URL for testing
 const API_URL = "https://3bd7-149-36-0-187.ngrok-free.app";
 
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 const MusicGenPage = () => {
   const { tracks, setTracks } = useTrackStore();
   const [prompt, updatePrompt] = useState<string>();
@@ -61,6 +63,7 @@ const MusicGenPage = () => {
   const [loading, updateLoading] = useState(false);
   const [trackPlaying, updateTrackPlaying] = useState(false);
   const [loadingSpeed, updateLoadingSpeed] = useState(4);
+  const [prediction, setPrediction] = useState();
 
   const audioRef = useRef(null);
   const [AudioViz, init] = useVisualizer(audioRef);
@@ -80,26 +83,42 @@ const MusicGenPage = () => {
   } = useApiStore();
 
   const getTracks = async () => {
-    try {
-      const { data: tracks } = await supabase.storage
-        .from("tracks")
-        .list(user?.id + "/", {
-          limit: 30,
-          offset: 0,
-          sortBy: {
-            column: "created_at",
-            order: "desc",
-          },
-        });
+    // API Server Offline
+    // try {
+    //   const { data: tracks } = await supabase.storage
+    //     .from("tracks")
+    //     .list(user?.id + "/", {
+    //       limit: 30,
+    //       offset: 0,
+    //       sortBy: {
+    //         column: "created_at",
+    //         order: "desc",
+    //       },
+    //     });
 
-      const tracksAny: any = tracks;
+    //   const tracksAny: any = tracks;
+
+    //   if (tracks !== null) {
+    //     setTracks(tracksAny);
+    //   }
+    // } catch (e) {
+    //   alert(e);
+    // } finally {
+    // }
+
+    try {
+      const { data: tracks } = await supabase
+        .from("replicate-tracks")
+        .select()
+        .order("created_at", { ascending: false })
+        .eq("id", user!.id)
+        .eq("type", "musicgen");
 
       if (tracks !== null) {
-        setTracks(tracksAny);
+        setTracks(tracks);
       }
     } catch (e) {
       alert(e);
-    } finally {
     }
   };
 
@@ -135,14 +154,15 @@ const MusicGenPage = () => {
     length = Math.round(trackLength || 5);
     prompt = prompt || "Classic Rock Anthem";
 
-    const track = await axios.get(
-      `${API_URL}/?prompt=${prompt}&length=${length}`,
-      {
-        headers: {
-          "ngrok-skip-browser-warning": "69420",
-        },
-      }
-    );
+    // API server currently offline
+    // const track = await axios.get(
+    //   `${API_URL}/?prompt=${prompt}&length=${length}`,
+    //   {
+    //     headers: {
+    //       "ngrok-skip-browser-warning": "69420",
+    //     },
+    //   }
+    // );
 
     // const track = await axios.post("/api/musicgen", {
     //   user: user,
@@ -150,17 +170,62 @@ const MusicGenPage = () => {
     //   length: length,
     // });
 
+    // await incrementApiLimit(user, supabase);
+
+    // const { data, error } = await supabase.storage
+    //   .from("tracks")
+    //   .upload(
+    //     user?.id + "/" + `${prompt}-${uuidv4()}.wav`,
+    //     decode(track.data),
+    //     {
+    //       contentType: "audio/wav",
+    //     }
+    //   );
+
+    const metadata = JSON.stringify({
+      prompt: prompt,
+      duration: length,
+    });
+
+    const response = await fetch("/api/predictions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: metadata,
+    });
+
     await incrementApiLimit(user, supabase);
 
-    const { data, error } = await supabase.storage
-      .from("tracks")
-      .upload(
-        user?.id + "/" + `${prompt}-${uuidv4()}.wav`,
-        decode(track.data),
-        {
-          contentType: "audio/wav",
-        }
-      );
+    let prediction = await response.json();
+    if (response.status !== 201) {
+      setError(prediction.detail);
+      return;
+    }
+    setPrediction(prediction);
+
+    while (
+      prediction.status !== "succeeded" &&
+      prediction.status !== "failed"
+    ) {
+      await sleep(1000);
+      const response = await fetch("/api/predictions/" + prediction.id);
+      prediction = await response.json();
+      if (response.status !== 200) {
+        console.log(prediction.detail);
+        return;
+      }
+      console.log({ prediction });
+      setPrediction(prediction);
+    }
+    const blob = await fetch(prediction.output).then((r) => r.blob());
+
+    const { data, error } = await supabase.from("replicate-tracks").insert({
+      title: prompt,
+      url: prediction.output,
+      type: "musicgen",
+      metadata: metadata,
+    });
 
     setQueue((oldQueue) => {
       const newQueue = oldQueue.slice(1);
